@@ -13,6 +13,7 @@ dependencies = [
     "sse-starlette>=2.2",
     "pydantic-settings>=2.7",
     "alembic>=1.13",
+    "pytoml>=0.1.21",
 ]
 
 [project.optional-dependencies]

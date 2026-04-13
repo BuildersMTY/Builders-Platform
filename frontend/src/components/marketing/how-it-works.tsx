@@ -1,35 +1,65 @@
-import { FolderSearch, Code2, Briefcase } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-
-interface StepProps {
-  icon: LucideIcon;
+function TimelineStep({
+  number,
+  title,
+  description,
+  detail,
+}: {
   number: string;
   title: string;
   description: string;
-}
-
-function Step({ icon: Icon, number, title, description }: StepProps) {
+  detail: string;
+}) {
   return (
-    <div className="flex flex-col items-center text-center">
-      <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-primary-subtle">
-        <Icon size={28} className="text-primary" />
+    <div className="relative pl-12">
+      {/* Dot on the line */}
+      <div className="absolute left-0 top-1 flex h-[31px] w-[31px] items-center justify-center rounded-full border border-primary/30 bg-bg">
+        <div className="h-2 w-2 rounded-full bg-primary" />
       </div>
-      <span className="mt-4 text-sm font-medium text-text-dim">{number}</span>
+
+      <span className="text-xs font-medium uppercase tracking-widest text-primary/60">
+        {number}
+      </span>
       <h3 className="mt-1 text-xl font-semibold">{title}</h3>
-      <p className="mt-2 max-w-xs text-sm text-text-muted">{description}</p>
+      <p className="mt-2 max-w-md text-sm leading-relaxed text-text-muted">
+        {description}
+      </p>
+      <p className="mt-3 font-mono text-xs text-text-dim">{detail}</p>
     </div>
   );
 }
 
 export function HowItWorks() {
   return (
-    <section id="como-funciona" className="px-6 py-24">
-      <div className="mx-auto max-w-4xl">
-        <h2 className="text-center text-3xl font-bold md:text-4xl">Cómo funciona</h2>
-        <div className="mt-16 grid gap-12 md:grid-cols-3">
-          <Step icon={FolderSearch} number="01" title="Elige un proyecto" description="HTTP servers, DNS, Git — desafíos reales que los devs construyen en la industria." />
-          <Step icon={Code2} number="02" title="Escribe código real" description="Submódulos guiados con pruebas automatizadas. Sin hand-holding — tú escribes cada línea." />
-          <Step icon={Briefcase} number="03" title="Llévalo a tu portafolio" description="Proyecto terminado en tu GitHub con tu historial de commits. Certificación lista para LinkedIn." />
+    <section id="como-funciona" className="px-6 py-32">
+      <div className="mx-auto max-w-3xl">
+        <p className="text-sm font-medium uppercase tracking-widest text-text-dim">
+          Cómo funciona
+        </p>
+
+        <div className="relative mt-16">
+          {/* Vertical connector */}
+          <div className="absolute left-[15px] top-0 bottom-0 w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
+
+          <div className="space-y-16">
+            <TimelineStep
+              number="01"
+              title="Elige un proyecto"
+              description="HTTP servers, DNS, Git — los mismos desafíos que los ingenieros resuelven en la industria."
+              detail="http-server · dns-resolver · git-clone"
+            />
+            <TimelineStep
+              number="02"
+              title="Escribe código real"
+              description="Submódulos guiados con pruebas automatizadas. Sin hand-holding — tú escribes cada línea."
+              detail="func handleConnection(conn net.Conn) { ... }"
+            />
+            <TimelineStep
+              number="03"
+              title="Llévalo a tu portafolio"
+              description="Tu proyecto en tu GitHub, con tu historial de commits. Certificación lista para LinkedIn."
+              detail="github.com/tu-usuario/http-server"
+            />
+          </div>
         </div>
       </div>
     </section>

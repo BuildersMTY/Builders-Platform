@@ -132,8 +132,9 @@ func findFreePort() int {
 }
 
 func buildEnvList(env map[string]string) []string {
-	var list []string
-	list = append(list, "PATH="+os.Getenv("PATH"))
+	// Start with the full parent environment so spawned processes have
+	// SYSTEMROOT, TEMP, HOME, etc. Then overlay buildmancer-specific vars.
+	list := os.Environ()
 	for k, v := range env {
 		list = append(list, fmt.Sprintf("%s=%s", k, v))
 	}

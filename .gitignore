@@ -41,5 +41,9 @@ Thumbs.db
 frontend/node_modules/
 frontend/.next/
 
+# Courses (cloned from BuildersMTY/Builders-courses)
+_courses/
+_courses_repo/
+
 # Superpowers brainstorm sessions
 .superpowers/
