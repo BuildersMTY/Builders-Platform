@@ -1,33 +1,19 @@
 "use client";
 
 import { useWorkspace } from "./workspace-provider";
+import { ModuleList } from "./module-list";
+import { FileTree } from "./file-tree";
 
 export function Panel() {
-  const { panelView, panelOpen, activeSubmodule, openResourceReader } = useWorkspace();
+  const { panelView, panelOpen } = useWorkspace();
 
   if (!panelOpen || !panelView) return null;
 
   return (
     <div className="h-full w-[220px] flex-shrink-0 overflow-y-auto border-r border-border bg-surface">
-      {panelView === "modules" && <ModulesPlaceholder />}
-      {panelView === "files" && <FilesPlaceholder />}
+      {panelView === "modules" && <ModuleList />}
+      {panelView === "files" && <FileTree />}
       {panelView === "resources" && <ResourceList />}
-    </div>
-  );
-}
-
-function ModulesPlaceholder() {
-  return (
-    <div className="p-3">
-      <p className="text-xs text-text-dim">Módulos (loading in Task 10)</p>
-    </div>
-  );
-}
-
-function FilesPlaceholder() {
-  return (
-    <div className="p-3">
-      <p className="text-xs text-text-dim">Archivos (loading in Task 10)</p>
     </div>
   );
 }
