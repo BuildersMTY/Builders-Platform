@@ -40,3 +40,6 @@ Thumbs.db
 # Frontend
 frontend/node_modules/
 frontend/.next/
+
+# Superpowers brainstorm sessions
+.superpowers/
