@@ -1,0 +1,22 @@
+meta:
+  title: "Hello World"
+  description: "A basic course to validate the platform."
+
+modules:
+  - id: basics
+    title: "Module 1 — Basics"
+    description: "Learn the fundamentals."
+    submodules:
+      - id: hello
+        title: "Print Hello World"
+        spec: >-
+          Implement the Hello() function that returns the string "Hello, World!".
+        resources:
+          - title: "fmt documentation"
+            file: basics/hello_doc.md
+          - title: "Hint: use fmt.Sprintf"
+            file: basics/hello_hint.md
+      - id: echo
+        title: "Echo stdin"
+        spec: >-
+          Modify main() to read a line from stdin and print it to stdout.

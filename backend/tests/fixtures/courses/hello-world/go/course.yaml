@@ -1,0 +1,50 @@
+meta:
+  slug: hello-world
+  title: "Hola Mundo"
+  description: "Un curso básico para validar la plataforma."
+  language: go
+  difficulty: beginner
+  runner: buildmancer/runner-go:latest
+  estimated_hours:
+    junior: 1
+    mid: 1
+    senior: 1
+
+modules:
+  - id: basics
+    title: "Módulo 1 — Básicos"
+    description: "Aprende a imprimir y leer de stdin."
+    submodules:
+      - id: hello
+        title: "Imprime Hola Mundo"
+        spec: >-
+          Implementa la función Hello() que regresa el string "Hello, World!".
+        stubs:
+          - path: main.go
+        tests:
+          - type: unit
+            match: TestHello
+            timeout_ms: 5000
+        resources:
+          - title: "Documentación de fmt"
+            file: basics/hello_doc.md
+            type: doc
+            visible_to: [junior, mid, senior]
+          - title: "Pista: usa fmt.Sprintf"
+            file: basics/hello_hint.md
+            type: hint
+            visible_to: [junior]
+      - id: echo
+        title: "Eco de stdin"
+        spec: >-
+          Modifica main() para leer una línea de stdin e imprimirla a stdout.
+        stubs:
+          - path: main.go
+        tests:
+          - type: stdout
+            stdin: "test input"
+            expected_stdout: "test input\n"
+            timeout_ms: 3000
+          - type: script
+            file: tests/echo_test.sh
+            timeout_ms: 5000
