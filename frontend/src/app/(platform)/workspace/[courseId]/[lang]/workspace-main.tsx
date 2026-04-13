@@ -8,6 +8,7 @@ import { TabBar } from "@/components/workspace/tab-bar";
 import { TestOutput } from "@/components/workspace/test-output";
 import { useAutosave } from "@/hooks/use-autosave";
 import { fetchCourse, fetchFiles, fetchProgress } from "@/lib/api";
+import { ResourceReader } from "@/components/workspace/resource-reader";
 
 export function WorkspaceMain() {
   const params = useParams<{ courseId: string; lang: string }>();
@@ -21,6 +22,8 @@ export function WorkspaceMain() {
     setActiveSubmodule,
     setPassedSubmodules,
     testOutputOpen,
+    resourceReaderOpen,
+    resourceReaderMode,
   } = useWorkspace();
 
   const activeContent = files.find((f) => f.filepath === activeFile)?.content ?? "";
@@ -95,22 +98,26 @@ export function WorkspaceMain() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <TabBar saving={saving} saved={saved} />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        {activeFile ? (
-          <div className="flex-1 overflow-hidden">
-            <Editor
-              content={activeContent}
-              language={course.meta.language}
-              onChange={(val) => updateFileContent(activeFile, val)}
-            />
-          </div>
-        ) : (
-          <div className="flex flex-1 items-center justify-center text-sm text-text-dim">
-            Selecciona un archivo para editar
-          </div>
-        )}
-        {testOutputOpen && <TestOutput />}
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex flex-1 flex-col overflow-hidden">
+          {activeFile ? (
+            <div className="flex-1 overflow-hidden">
+              <Editor
+                content={activeContent}
+                language={course.meta.language}
+                onChange={(val) => updateFileContent(activeFile, val)}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-1 items-center justify-center text-sm text-text-dim">
+              Selecciona un archivo para editar
+            </div>
+          )}
+          {testOutputOpen && <TestOutput />}
+        </div>
+        {resourceReaderOpen && resourceReaderMode === "split" && <ResourceReader />}
       </div>
+      {resourceReaderOpen && resourceReaderMode === "slide-over" && <ResourceReader />}
     </div>
   );
 }
