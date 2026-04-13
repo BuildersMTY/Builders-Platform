@@ -28,7 +28,7 @@ echo "  Enrollment: $ENROLL"
 # 4. Get files
 echo "[4/7] Getting working files..."
 FILES=$(curl -sf "$API/api/files/hello-world/go")
-echo "  Files: $(echo $FILES | python3 -c 'import sys,json; print([f["filepath"] for f in json.load(sys.stdin)])')"
+echo "  Files: $(echo $FILES | python -c 'import sys,json; print([f["filepath"] for f in json.load(sys.stdin)])')"
 
 # 5. Patch a file (implement Hello)
 echo "[5/7] Patching main.go with solution..."
@@ -40,7 +40,7 @@ echo "  OK"
 # 6. Trigger a run
 echo "[6/7] Running tests for basics/hello..."
 RUN_RESP=$(curl -sf -X POST "$API/api/run/hello-world/go/basics/hello")
-RUN_ID=$(echo $RUN_RESP | python3 -c 'import sys,json; print(json.load(sys.stdin)["run_id"])')
+RUN_ID=$(echo $RUN_RESP | python -c 'import sys,json; print(json.load(sys.stdin)["run_id"])')
 echo "  Run ID: $RUN_ID"
 
 # 7. Stream results
