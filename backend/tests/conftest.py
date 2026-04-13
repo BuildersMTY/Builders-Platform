@@ -1,14 +1,21 @@
 # backend/tests/conftest.py
 from pathlib import Path
 import pytest
+from sqlalchemy.pool import StaticPool
 from sqlmodel import Session, SQLModel, create_engine
 from fastapi.testclient import TestClient
 from api.course_loader import cache as course_cache
+from api.db.models import Enrollment, WorkingFile, Progress  # noqa: F401 — needed for metadata
 from api.dependencies import get_db
 
 FIXTURES_PATH = Path(__file__).parent / "fixtures"
 
-_test_engine = create_engine("sqlite://", echo=False)
+_test_engine = create_engine(
+    "sqlite://",
+    echo=False,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
 
 
 @pytest.fixture
