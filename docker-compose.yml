@@ -1,0 +1,39 @@
+# docker-compose.yml
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: buildmancer
+      POSTGRES_PASSWORD: buildmancer
+      POSTGRES_DB: buildmancer
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://buildmancer:buildmancer@postgres:5432/buildmancer
+      - RUNNER_URL=http://runner:9000
+      - COURSES_PATH=/mnt/courses
+    depends_on:
+      - postgres
+      - runner
+    volumes:
+      - ./backend/api:/app
+      - ${COURSES_PATH:-./_courses}:/mnt/courses:ro
+
+  runner:
+    build:
+      context: ./backend/runner
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+
+volumes:
+  pgdata:
