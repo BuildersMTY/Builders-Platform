@@ -29,42 +29,57 @@ export function ModuleList() {
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-0.5">
-        {course.modules.map((mod) =>
-          mod.submodules.map((sub) => {
-            const passed = passedSubmodules.has(sub.full_id);
-            const isActive = activeSubmodule?.full_id === sub.full_id;
-            const allSubs = course.modules.flatMap((m) => m.submodules);
-            const idx = allSubs.findIndex((s) => s.full_id === sub.full_id);
-            const locked = !passed && !isActive && idx > 0 && !passedSubmodules.has(allSubs[idx - 1].full_id);
+      <div className="mt-4 flex flex-col gap-1">
+        {course.modules.map((mod) => {
+          const allSubs = course.modules.flatMap((m) => m.submodules);
 
-            return (
-              <button
-                key={sub.full_id}
-                onClick={() => { if (!locked) setActiveSubmodule(mod, sub); }}
-                disabled={locked}
-                className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors duration-150 ${
-                  isActive
-                    ? "bg-primary-subtle border-l-2 border-primary"
-                    : locked
-                      ? "opacity-40 cursor-not-allowed"
-                      : "hover:bg-surface-hover"
-                }`}
-              >
-                {passed ? (
-                  <CheckCircle2 size={16} className="flex-shrink-0 text-success" />
-                ) : isActive ? (
-                  <CircleDot size={16} className="flex-shrink-0 text-warning" />
-                ) : (
-                  <Circle size={16} className="flex-shrink-0 text-text-dim" />
-                )}
-                <span className={`text-xs ${isActive ? "font-medium text-text" : passed ? "text-text-muted" : "text-text-dim"}`}>
-                  {sub.title}
+          return (
+            <div key={mod.id}>
+              {/* Module group header */}
+              <div className="mt-3 first:mt-0 mb-1 px-2">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-text-dim">
+                  {mod.title}
                 </span>
-              </button>
-            );
-          })
-        )}
+              </div>
+
+              {/* Submodules */}
+              <div className="flex flex-col gap-0.5">
+                {mod.submodules.map((sub) => {
+                  const passed = passedSubmodules.has(sub.full_id);
+                  const isActive = activeSubmodule?.full_id === sub.full_id;
+                  const idx = allSubs.findIndex((s) => s.full_id === sub.full_id);
+                  const locked = !passed && !isActive && idx > 0 && !passedSubmodules.has(allSubs[idx - 1].full_id);
+
+                  return (
+                    <button
+                      key={sub.full_id}
+                      onClick={() => { if (!locked) setActiveSubmodule(mod, sub); }}
+                      disabled={locked}
+                      className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-left transition-colors duration-150 ${
+                        isActive
+                          ? "bg-primary-subtle border-l-2 border-primary"
+                          : locked
+                            ? "opacity-40 cursor-not-allowed"
+                            : "hover:bg-surface-hover"
+                      }`}
+                    >
+                      {passed ? (
+                        <CheckCircle2 size={16} className="flex-shrink-0 text-success" />
+                      ) : isActive ? (
+                        <CircleDot size={16} className="flex-shrink-0 text-warning" />
+                      ) : (
+                        <Circle size={16} className="flex-shrink-0 text-text-dim" />
+                      )}
+                      <span className={`text-xs ${isActive ? "font-medium text-text" : passed ? "text-text-muted" : "text-text-dim"}`}>
+                        {sub.title}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

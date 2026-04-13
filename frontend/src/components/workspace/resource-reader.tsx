@@ -28,8 +28,22 @@ export function ResourceReader() {
 
   useEffect(() => {
     if (!activeResource) return;
-    const match = resources.find((r) => r.title === activeResource);
-    setContent(match?.content ?? "");
+    // Match by title or by file path (panel sends r.file, API returns r.title)
+    const match = resources.find(
+      (r) => r.title === activeResource
+    );
+    if (match) {
+      setContent(match.content);
+    } else {
+      // activeResource is a file path — find the matching resource by index
+      const subRes = activeSubmodule?.resources;
+      if (subRes) {
+        const idx = subRes.findIndex((r) => r.file === activeResource);
+        if (idx >= 0 && resources[idx]) {
+          setContent(resources[idx].content);
+        }
+      }
+    }
   }, [activeResource, resources]);
 
   useEffect(() => {
