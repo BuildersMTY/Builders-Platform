@@ -113,9 +113,11 @@ def _validate(course: Course, course_dir: Path, locale: str) -> None:
             for resource in sub.resources:
                 res_path = locale_resource_dir / resource.file
                 fallback_path = base_resource_dir / resource.file
-                if not res_path.exists() and not fallback_path.exists():
+                flat_path = course_dir / "resources" / resource.file
+                if not res_path.exists() and not fallback_path.exists() and not flat_path.exists():
                     raise ValidationError(
-                        f"Resource file not found: {resource.file} (checked {res_path} and {fallback_path})")
+                        f"Resource file not found: {resource.file} "
+                        f"(checked {res_path}, {fallback_path}, and {flat_path})")
             for test in sub.tests:
                 if test.type == "script" and test.file:
                     script_path = course_dir / test.file

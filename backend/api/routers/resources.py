@@ -43,6 +43,8 @@ def get_resources(slug: str, lang: str, submodule_id: str, db: Session = Depends
         res_path = course_dir / "resources" / locale / res.file
         if not res_path.exists():
             res_path = course_dir / "resources" / "es" / res.file
+        if not res_path.exists():
+            res_path = course_dir / "resources" / res.file
         content = ""
         if res_path.exists():
             content = res_path.read_text(encoding="utf-8")
