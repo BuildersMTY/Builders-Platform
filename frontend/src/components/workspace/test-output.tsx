@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { X, CheckCircle2, XCircle, Circle, Loader2 } from "lucide-react";
 import { useWorkspace } from "./workspace-provider";
@@ -16,9 +16,18 @@ export function TestOutput() {
     activeSubmodule?.full_id ?? null
   );
 
+  // Auto-run on first mount (panel was opened by the run button)
+  const hasRunOnMount = useRef(false);
+  useEffect(() => {
+    if (!hasRunOnMount.current && status === "idle") {
+      hasRunOnMount.current = true;
+      run();
+    }
+  }, [run, status]);
+
+  // Listen for subsequent run requests and escape
   useEffect(() => {
     function handleRun() {
-      setTestOutputOpen(true);
       run();
     }
     function handleEscape() {

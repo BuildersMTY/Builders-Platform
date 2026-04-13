@@ -22,6 +22,7 @@ export function WorkspaceMain() {
     setActiveSubmodule,
     setPassedSubmodules,
     testOutputOpen,
+    setTestOutputOpen,
     resourceReaderOpen,
     resourceReaderMode,
   } = useWorkspace();
@@ -65,6 +66,15 @@ export function WorkspaceMain() {
     }
     load();
   }, [params.courseId, params.lang, setCourse, setFiles, setActiveSubmodule, setPassedSubmodules]);
+
+  // Listen for run-tests event (from icon rail button) — open the panel
+  useEffect(() => {
+    function handleRunRequest() {
+      setTestOutputOpen(true);
+    }
+    window.addEventListener("buildmancer:run-tests", handleRunRequest);
+    return () => window.removeEventListener("buildmancer:run-tests", handleRunRequest);
+  }, [setTestOutputOpen]);
 
   // Keyboard shortcuts
   useEffect(() => {
