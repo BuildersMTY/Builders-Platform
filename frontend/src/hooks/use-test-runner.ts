@@ -8,7 +8,7 @@ export type TestStatus = "idle" | "running" | "done";
 
 interface TestLine {
   index: number;
-  passed: boolean | null;
+  passed: boolean | null; // null = info/pending
   message: string;
 }
 
@@ -30,8 +30,20 @@ export function useTestRunner(
   const eventSourceRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
-    return () => { eventSourceRef.current?.close(); };
+    return () => {
+      eventSourceRef.current?.close();
+    };
   }, []);
+
+  const addLine = useCallback(
+    (passed: boolean | null, message: string) => {
+      setLines((prev) => [
+        ...prev,
+        { index: prev.length, passed, message },
+      ]);
+    },
+    []
+  );
 
   const run = useCallback(async () => {
     if (!submoduleId) return;
@@ -45,38 +57,134 @@ export function useTestRunner(
       const es = new EventSource(`/api/stream/${run_id}`);
       eventSourceRef.current = es;
 
+      // Build lifecycle
+      es.addEventListener("build_start", () => {
+        addLine(null, "Compilando...");
+      });
+
+      es.addEventListener("build_done", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(data.success ? true : false, data.success ? "Build exitoso" : "Build falló");
+        } catch {
+          addLine(true, "Build completado");
+        }
+      });
+
+      es.addEventListener("build_error", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(false, data.error ?? data.output ?? "Error de compilación");
+        } catch {
+          addLine(false, "Error de compilación");
+        }
+      });
+
+      // Process lifecycle
+      es.addEventListener("process_started", () => {
+        addLine(null, "Proceso iniciado, ejecutando pruebas...");
+      });
+
+      es.addEventListener("process_crashed", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(false, data.error ?? "El proceso falló");
+        } catch {
+          addLine(false, "El proceso falló");
+        }
+      });
+
+      // Individual test results
+      es.addEventListener("test_pass", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(true, data.message ?? "Test pasó");
+        } catch {
+          addLine(true, "Test pasó");
+        }
+      });
+
+      es.addEventListener("test_fail", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(false, data.message ?? "Test falló");
+        } catch {
+          addLine(false, "Test falló");
+        }
+      });
+
+      // Final summary
       es.addEventListener("run_complete", (event) => {
-        const data = JSON.parse(event.data) as { all_passed: boolean; results: TestResult[] };
-        setLines(data.results.map((r) => ({ index: r.test_index, passed: r.passed, message: r.message })));
-        setAllPassed(data.all_passed);
+        try {
+          const data = JSON.parse(event.data);
+          const passed = data.all_passed ?? false;
+          setAllPassed(passed);
+
+          // If results array exists, add individual test results
+          if (data.results && Array.isArray(data.results)) {
+            const resultLines: TestLine[] = data.results.map(
+              (r: TestResult, i: number) => ({
+                index: i,
+                passed: r.passed,
+                message: r.message,
+              })
+            );
+            setLines((prev) => {
+              const infoLines = prev.filter((l) => l.passed === null);
+              return [...infoLines, ...resultLines];
+            });
+          }
+
+          addLine(
+            passed,
+            passed ? "Todas las pruebas pasaron" : "Algunas pruebas fallaron"
+          );
+        } catch {
+          // No parseable data
+        }
         setStatus("done");
         es.close();
       });
 
+      // System error from Python API
       es.addEventListener("system_error", (event) => {
-        const data = JSON.parse(event.data);
-        setLines([{ index: 0, passed: false, message: data.error ?? "Error del sistema" }]);
+        try {
+          const data = JSON.parse(event.data);
+          addLine(false, data.error ?? "Error del sistema");
+        } catch {
+          addLine(false, "Error del sistema");
+        }
         setAllPassed(false);
         setStatus("done");
         es.close();
       });
 
+      // Generic unnamed messages (fallback)
       es.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
           if (data.line) {
-            setLines((prev) => [...prev, { index: prev.length, passed: null, message: data.line }]);
+            addLine(null, data.line);
+          } else if (data.output) {
+            addLine(null, data.output);
           }
-        } catch { /* Not JSON — ignore */ }
+        } catch {
+          if (event.data.trim()) {
+            addLine(null, event.data);
+          }
+        }
       };
 
-      es.onerror = () => { setStatus("done"); es.close(); };
+      es.onerror = () => {
+        setStatus("done");
+        es.close();
+      };
     } catch {
-      setLines([{ index: 0, passed: false, message: "Error al iniciar las pruebas" }]);
+      addLine(false, "Error al iniciar las pruebas");
       setAllPassed(false);
       setStatus("done");
     }
-  }, [courseId, lang, submoduleId]);
+  }, [courseId, lang, submoduleId, addLine]);
 
   return { status, lines, allPassed, run };
 }
