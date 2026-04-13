@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useWorkspace } from "@/components/workspace/workspace-provider";
 import { Editor } from "@/components/workspace/editor";
 import { TabBar } from "@/components/workspace/tab-bar";
+import { TestOutput } from "@/components/workspace/test-output";
 import { useAutosave } from "@/hooks/use-autosave";
 import { fetchCourse, fetchFiles, fetchProgress } from "@/lib/api";
 
@@ -19,6 +20,7 @@ export function WorkspaceMain() {
     updateFileContent,
     setActiveSubmodule,
     setPassedSubmodules,
+    testOutputOpen,
   } = useWorkspace();
 
   const activeContent = files.find((f) => f.filepath === activeFile)?.content ?? "";
@@ -93,19 +95,22 @@ export function WorkspaceMain() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
       <TabBar saving={saving} saved={saved} />
-      {activeFile ? (
-        <div className="flex-1 overflow-hidden">
-          <Editor
-            content={activeContent}
-            language={course.meta.language}
-            onChange={(val) => updateFileContent(activeFile, val)}
-          />
-        </div>
-      ) : (
-        <div className="flex flex-1 items-center justify-center text-sm text-text-dim">
-          Selecciona un archivo para editar
-        </div>
-      )}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {activeFile ? (
+          <div className="flex-1 overflow-hidden">
+            <Editor
+              content={activeContent}
+              language={course.meta.language}
+              onChange={(val) => updateFileContent(activeFile, val)}
+            />
+          </div>
+        ) : (
+          <div className="flex flex-1 items-center justify-center text-sm text-text-dim">
+            Selecciona un archivo para editar
+          </div>
+        )}
+        {testOutputOpen && <TestOutput />}
+      </div>
     </div>
   );
 }
