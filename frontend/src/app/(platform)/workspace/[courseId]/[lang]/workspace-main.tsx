@@ -3,6 +3,9 @@
 import { useEffect } from "react";
 import { useParams } from "next/navigation";
 import { useWorkspace } from "@/components/workspace/workspace-provider";
+import { Editor } from "@/components/workspace/editor";
+import { TabBar } from "@/components/workspace/tab-bar";
+import { useAutosave } from "@/hooks/use-autosave";
 import { fetchCourse, fetchFiles, fetchProgress } from "@/lib/api";
 
 export function WorkspaceMain() {
@@ -10,12 +13,22 @@ export function WorkspaceMain() {
   const {
     course,
     setCourse,
+    files,
     setFiles,
+    activeFile,
+    updateFileContent,
     setActiveSubmodule,
     setPassedSubmodules,
-    activeFile,
-    files,
   } = useWorkspace();
+
+  const activeContent = files.find((f) => f.filepath === activeFile)?.content ?? "";
+
+  const { saving, saved, forceSave } = useAutosave({
+    courseId: params.courseId,
+    lang: params.lang,
+    filepath: activeFile,
+    content: activeContent,
+  });
 
   useEffect(() => {
     async function load() {
@@ -48,6 +61,27 @@ export function WorkspaceMain() {
     load();
   }, [params.courseId, params.lang, setCourse, setFiles, setActiveSubmodule, setPassedSubmodules]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const mod = e.metaKey || e.ctrlKey;
+      if (mod && e.key === "Enter") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("buildmancer:run-tests"));
+      }
+      if (mod && e.key === "s") {
+        e.preventDefault();
+        forceSave();
+      }
+      if (e.key === "Escape") {
+        e.preventDefault();
+        window.dispatchEvent(new CustomEvent("buildmancer:escape"));
+      }
+    }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [forceSave]);
+
   if (!course) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -56,19 +90,22 @@ export function WorkspaceMain() {
     );
   }
 
-  const activeContent = files.find((f) => f.filepath === activeFile);
-
   return (
     <div className="flex flex-1 flex-col overflow-hidden">
-      <div className="flex flex-1 items-center justify-center bg-bg text-text-dim text-sm">
-        {activeFile ? (
-          <pre className="max-h-full overflow-auto p-4 font-mono text-xs text-text-muted">
-            {activeContent?.content ?? ""}
-          </pre>
-        ) : (
-          "Selecciona un archivo"
-        )}
-      </div>
+      <TabBar saving={saving} saved={saved} />
+      {activeFile ? (
+        <div className="flex-1 overflow-hidden">
+          <Editor
+            content={activeContent}
+            language={course.meta.language}
+            onChange={(val) => updateFileContent(activeFile, val)}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-1 items-center justify-center text-sm text-text-dim">
+          Selecciona un archivo para editar
+        </div>
+      )}
     </div>
   );
 }
