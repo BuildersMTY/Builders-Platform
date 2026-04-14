@@ -3,21 +3,22 @@
 
 @theme {
   --color-bg: #131111;
-  --color-surface: #0d0d0d;
-  --color-surface-hover: #1a1a1a;
-  --color-border: #1a1a1a;
+  --color-surface: #0c0a0a;
+  --color-surface-alt: #171515;
+  --color-surface-hover: #1e1c1c;
+  --color-border: #2a2727;
   --color-primary: #ff0000;
   --color-primary-hover: #cc0000;
-  --color-primary-subtle: rgba(255, 0, 0, 0.08);
+  --color-primary-subtle: rgba(255, 0, 0, 0.12);
   --color-text: #ffffff;
-  --color-text-muted: #888888;
-  --color-text-dim: #555555;
+  --color-text-muted: #9a9a9a;
+  --color-text-dim: #8a8a8a;
   --color-success: #4ec9b0;
   --color-error: #f44747;
   --color-warning: #ff6600;
 
   --font-sans: 'Sora', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+  --font-serif: 'Bodoni Moda', ui-serif, Georgia, serif;
   --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
 }
 
@@ -49,6 +50,17 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-dim);
+}
+
+/* Focus visibility — all interactive elements get a red ring on keyboard focus */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Remove default outline since we handle it with focus-visible */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Hero entrance */
@@ -83,8 +95,8 @@ body {
 
 /* Workspace animations */
 @keyframes slideUp {
-  from { height: 0; opacity: 0; }
-  to { height: 180px; opacity: 1; }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeIn {
@@ -98,4 +110,82 @@ body {
 
 .animate-fadeIn {
   animation: fadeIn 100ms ease both;
+}
+
+/* Success overlay */
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes checkDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-overlayIn {
+  animation: overlayIn 200ms ease-out;
+}
+
+.animate-checkDraw {
+  animation: checkDraw 400ms cubic-bezier(0.65, 0, 0.35, 1) 200ms forwards;
+}
+
+/* Run button pulse — draws attention when tests haven't been run */
+@keyframes runPulse {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.15); }
+}
+
+.animate-runPulse {
+  animation: runPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Submodule transition crossfade */
+@keyframes contentSwap {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-contentSwap {
+  animation: contentSwap 150ms ease-out;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-animate {
+    animation: none;
+    opacity: 1;
+  }
+
+  .reveal {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .animate-slideUp,
+  .animate-fadeIn,
+  .animate-overlayIn,
+  .animate-contentSwap,
+  .animate-checkDraw,
+  .animate-runPulse {
+    animation: none;
+  }
+
+  .animate-checkDraw {
+    stroke-dashoffset: 0;
+  }
+
+  .animate-pulse {
+    animation: none;
+  }
+
+  .animate-spin {
+    animation: none;
+  }
 }

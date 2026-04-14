@@ -12,7 +12,7 @@ function ValueBand({
   align: "left" | "right";
 }) {
   return (
-    <div className="border-t border-border px-6 py-16 md:py-24">
+    <div className="border-t border-border px-6 py-14 md:py-24">
       <div
         className={`mx-auto max-w-6xl ${align === "right" ? "text-right" : ""}`}
       >
@@ -21,9 +21,10 @@ function ValueBand({
           <span className="font-serif italic text-primary">{accent}</span>
         </h3>
         <p
-          className={`mt-6 max-w-md text-base leading-relaxed text-text-muted ${
+          className={`mt-6 max-w-md text-base text-text-muted ${
             align === "right" ? "ml-auto" : ""
           }`}
+          style={{ lineHeight: 1.7 }}
         >
           {description}
         </p>
@@ -34,28 +35,28 @@ function ValueBand({
 
 export function CareerValue() {
   return (
-    <section className="py-16 md:py-32">
+    <section className="py-16 md:py-28">
       <ScrollReveal>
         <ValueBand
           heading="Tu código."
           accent="Tu GitHub."
-          description="Termina un proyecto y el repositorio aparece en tu perfil. Con tu historial de commits real — no un template clonado."
+          description="Cada proyecto terminado vive en tu perfil con tu historial de commits. No es un fork. No es un template. Un reclutador puede abrir tu repo y leer exactamente cómo resolviste cada problema."
           align="left"
         />
       </ScrollReveal>
       <ScrollReveal>
         <ValueBand
-          heading="Certificación"
-          accent="verificable."
-          description="Demuestra que construiste un servidor HTTP desde cero. No que viste un video de cuatro horas."
+          heading="Zero"
+          accent="configuración."
+          description="Sin instalar Go. Sin configurar Docker. Sin perder una hora en tu entorno. Abre el navegador, elige un proyecto y escribe la primera línea de código en menos de un minuto."
           align="right"
         />
       </ScrollReveal>
       <ScrollReveal>
         <ValueBand
-          heading="Arquitectura"
-          accent="real."
-          description="Protocolos, concurrencia, parsing. Los mismos problemas que resuelven los ingenieros que construyeron el software que usas."
+          heading="No es un"
+          accent="bootcamp."
+          description="No hay videos. No hay lectures. No hay hand-holding. Recibes una especificación, un editor y pruebas automatizadas. Tú decides cómo implementarlo — como en un equipo de ingeniería real."
           align="left"
         />
       </ScrollReveal>

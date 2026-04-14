@@ -1,4 +1,4 @@
-function TimelineStep({
+function Step({
   number,
   title,
   description,
@@ -10,56 +10,55 @@ function TimelineStep({
   detail: string;
 }) {
   return (
-    <div className="relative pl-12">
-      {/* Dot on the line */}
-      <div className="absolute left-0 top-1 flex h-[31px] w-[31px] items-center justify-center rounded-full border border-primary/30 bg-bg">
-        <div className="h-2 w-2 rounded-full bg-primary" />
+    <div className="group grid gap-6 md:grid-cols-[120px_1fr] md:gap-10">
+      {/* Large step number — architectural, not decorative */}
+      <div className="flex items-baseline gap-3 md:justify-end">
+        <span className="font-serif text-6xl font-light italic leading-none tracking-tight text-primary md:text-7xl">
+          {number}
+        </span>
       </div>
 
-      <span className="text-xs font-medium uppercase tracking-widest text-primary/60">
-        {number}
-      </span>
-      <h3 className="mt-1 text-xl font-semibold">{title}</h3>
-      <p className="mt-2 max-w-md text-sm leading-relaxed text-text-muted">
-        {description}
-      </p>
-      <p className="mt-3 font-mono text-xs text-text-dim">{detail}</p>
+      {/* Content */}
+      <div className="border-t border-border pt-6">
+        <h3 className="text-xl font-semibold tracking-tight sm:text-2xl">
+          {title}
+        </h3>
+        <p className="mt-3 max-w-lg text-sm text-text-muted" style={{ lineHeight: 1.7 }}>
+          {description}
+        </p>
+        <p className="mt-4 font-mono text-xs text-text-dim">{detail}</p>
+      </div>
     </div>
   );
 }
 
 export function HowItWorks() {
   return (
-    <section id="como-funciona" className="px-6 py-32">
-      <div className="mx-auto max-w-3xl">
+    <section id="como-funciona" className="px-6 py-24">
+      <div className="mx-auto max-w-4xl">
         <p className="text-sm font-medium uppercase tracking-widest text-text-dim">
           Cómo funciona
         </p>
 
-        <div className="relative mt-16">
-          {/* Vertical connector */}
-          <div className="absolute left-[15px] top-0 bottom-0 w-px bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
-
-          <div className="space-y-16">
-            <TimelineStep
-              number="01"
-              title="Elige un proyecto"
-              description="HTTP servers, DNS, Git — los mismos desafíos que los ingenieros resuelven en la industria."
-              detail="http-server · dns-resolver · git-clone"
-            />
-            <TimelineStep
-              number="02"
-              title="Escribe código real"
-              description="Submódulos guiados con pruebas automatizadas. Sin hand-holding — tú escribes cada línea."
-              detail="func handleConnection(conn net.Conn) { ... }"
-            />
-            <TimelineStep
-              number="03"
-              title="Llévalo a tu portafolio"
-              description="Tu proyecto en tu GitHub, con tu historial de commits. Certificación lista para LinkedIn."
-              detail="github.com/tu-usuario/http-server"
-            />
-          </div>
+        <div className="mt-14 space-y-16">
+          <Step
+            number="01"
+            title="Elige un proyecto y un nivel"
+            description="HTTP servers, DNS, Git — los mismos desafíos que los ingenieros resuelven en la industria. Cada proyecto escala en dificultad: desde la implementación básica hasta optimización y edge cases. Juniors construyen cimientos. Seniors enfrentan concurrencia y performance."
+            detail="http-server · dns-resolver · git-clone"
+          />
+          <Step
+            number="02"
+            title="Abre el editor y construye"
+            description="Sin instalar nada. El entorno completo vive en tu navegador: editor con autocompletado, terminal integrada y pruebas automatizadas. Cada submódulo te da una especificación clara y valida tu código en tiempo real. Tú decides cómo resolverlo."
+            detail="func handleConnection(conn net.Conn) { ... }"
+          />
+          <Step
+            number="03"
+            title="Demuestra lo que construiste"
+            description="Tu proyecto terminado aparece en tu GitHub — con tu historial de commits real, no un fork ni un template. Agrega la certificación verificable a LinkedIn. Los reclutadores ven código, no credenciales genéricas."
+            detail="github.com/tu-usuario/http-server"
+          />
         </div>
       </div>
     </section>

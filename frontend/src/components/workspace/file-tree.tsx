@@ -6,7 +6,7 @@ import { useWorkspace } from "./workspace-provider";
 
 interface TreeNode {
   name: string;
-  path: string; // full filepath for files, folder path for dirs
+  path: string;
   type: "file" | "folder";
   children?: TreeNode[];
 }
@@ -41,7 +41,6 @@ function buildTree(paths: string[]): TreeNode[] {
     }
   }
 
-  // Sort: folders first, then files, alphabetical within each
   function sortNodes(nodes: TreeNode[]) {
     nodes.sort((a, b) => {
       if (a.type !== b.type) return a.type === "folder" ? -1 : 1;
@@ -57,30 +56,36 @@ function buildTree(paths: string[]): TreeNode[] {
 }
 
 export function FileTree() {
-  const { files, activeFile, openFile } = useWorkspace();
+  const { files, activeFile, activeSubmodule, openFile } = useWorkspace();
 
   if (files.length === 0) {
     return (
-      <div className="p-3">
+      <div className="p-4">
         <p className="text-xs text-text-dim">No hay archivos todavía.</p>
       </div>
     );
   }
 
+  // Collect stub paths for the active submodule
+  const stubPaths = new Set(
+    activeSubmodule?.stubs.map((s) => s.path) ?? []
+  );
+
   const tree = buildTree(files.map((f) => f.filepath));
 
   return (
-    <div className="p-3">
-      <h4 className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-        Archivos
+    <div className="p-4">
+      <h4 className="text-base tracking-tight">
+        <span className="font-serif italic text-primary">Archivos</span>
       </h4>
-      <div className="mt-3 flex flex-col gap-0.5">
+      <div className="mt-3 flex flex-col gap-0.5" role="tree" aria-label="File tree">
         {tree.map((node) => (
           <TreeNodeView
             key={node.path}
             node={node}
             depth={0}
             activeFile={activeFile}
+            stubPaths={stubPaths}
             onFileClick={openFile}
           />
         ))}
@@ -93,26 +98,38 @@ function TreeNodeView({
   node,
   depth,
   activeFile,
+  stubPaths,
   onFileClick,
 }: {
   node: TreeNode;
   depth: number;
   activeFile: string | null;
+  stubPaths: Set<string>;
   onFileClick: (filepath: string) => void;
 }) {
   const [expanded, setExpanded] = useState(true);
+
+  const isStub = node.type === "file" && stubPaths.has(node.path);
 
   if (node.type === "file") {
     return (
       <button
         onClick={() => onFileClick(node.path)}
-        className={`flex items-center gap-1.5 rounded-md py-1 text-left text-xs transition-colors ${
+        className={`flex items-center gap-1.5 rounded-md py-1.5 text-left text-xs transition-colors ${
           activeFile === node.path
-            ? "bg-surface-hover text-text"
-            : "text-text-muted hover:bg-surface-hover hover:text-text"
+            ? "bg-primary-subtle text-text"
+            : isStub
+              ? "text-text-muted hover:bg-surface-hover hover:text-text"
+              : "text-text-dim hover:bg-surface-hover hover:text-text-muted"
         }`}
         style={{ paddingLeft: `${depth * 12 + 8}px`, paddingRight: "8px" }}
+        role="treeitem"
+        aria-selected={activeFile === node.path}
       >
+        {/* Stub indicator dot */}
+        {isStub && (
+          <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+        )}
         <File size={13} className="flex-shrink-0" />
         {node.name}
       </button>
@@ -120,11 +137,13 @@ function TreeNodeView({
   }
 
   return (
-    <div>
+    <div role="group">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-1 rounded-md py-1 text-left text-xs text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
+        className="flex w-full items-center gap-1.5 rounded-md py-1.5 text-left text-xs text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
         style={{ paddingLeft: `${depth * 12 + 8}px`, paddingRight: "8px" }}
+        aria-expanded={expanded}
+        role="treeitem"
       >
         <ChevronRight
           size={12}
@@ -147,6 +166,7 @@ function TreeNodeView({
               node={child}
               depth={depth + 1}
               activeFile={activeFile}
+              stubPaths={stubPaths}
               onFileClick={onFileClick}
             />
           ))}

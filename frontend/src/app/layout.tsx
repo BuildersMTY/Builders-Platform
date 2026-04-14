@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sora, Instrument_Serif, JetBrains_Mono } from "next/font/google";
+import { Sora, Bodoni_Moda, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const sora = Sora({
@@ -7,11 +7,10 @@ const sora = Sora({
   variable: "--font-sora",
 });
 
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
-  style: ["normal", "italic"],
+const bodoniModa = Bodoni_Moda({
   subsets: ["latin"],
-  variable: "--font-instrument",
+  style: ["normal", "italic"],
+  variable: "--font-bodoni",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -33,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${sora.variable} ${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+      className={`${sora.variable} ${bodoniModa.variable} ${jetbrainsMono.variable}`}
     >
       <body className="bg-bg text-text min-h-screen">{children}</body>
     </html>

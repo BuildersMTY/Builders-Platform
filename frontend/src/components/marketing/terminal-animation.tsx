@@ -57,12 +57,12 @@ export function TerminalAnimation() {
   }, [cycle]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-white/[0.06] bg-[#0a0909] shadow-2xl">
+    <div className="overflow-hidden rounded-xl border border-border bg-[#0a0909] shadow-2xl">
       {/* Title bar */}
-      <div className="flex items-center gap-2 border-b border-white/[0.06] px-4 py-3">
-        <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
-        <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
-        <div className="h-2.5 w-2.5 rounded-full bg-white/10" />
+      <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+        <div className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <div className="h-2.5 w-2.5 rounded-full bg-white/15" />
+        <div className="h-2.5 w-2.5 rounded-full bg-white/15" />
         <span className="ml-2 text-[11px] text-text-dim">terminal</span>
       </div>
 

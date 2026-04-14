@@ -2,14 +2,17 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { runTests } from "@/lib/api";
-import type { TestResult } from "@/lib/types";
 
 export type TestStatus = "idle" | "running" | "done";
 
-interface TestLine {
+export interface TestLine {
   index: number;
   passed: boolean | null; // null = info/pending
   message: string;
+  expected?: string;
+  actual?: string;
+  hint?: string;
+  description?: string;
 }
 
 interface UseTestRunnerReturn {
@@ -36,10 +39,14 @@ export function useTestRunner(
   }, []);
 
   const addLine = useCallback(
-    (passed: boolean | null, message: string) => {
+    (
+      passed: boolean | null,
+      message: string,
+      extra?: Partial<Pick<TestLine, "expected" | "actual" | "hint" | "description">>
+    ) => {
       setLines((prev) => [
         ...prev,
-        { index: prev.length, passed, message },
+        { index: prev.length, passed, message, ...extra },
       ]);
     },
     []
@@ -94,7 +101,55 @@ export function useTestRunner(
         }
       });
 
-      // Individual test results
+      // Test lifecycle — matches Go runner event names
+      es.addEventListener("test_start", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.description) {
+            addLine(null, data.description, { description: data.description });
+          }
+        } catch {
+          // test_start without description is fine — skip
+        }
+      });
+
+      es.addEventListener("test_done", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(true, data.description ?? data.message ?? "Test pasó", {
+            description: data.description,
+          });
+        } catch {
+          addLine(true, "Test pasó");
+        }
+      });
+
+      es.addEventListener("test_failed", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          const message =
+            data.description ?? data.error ?? data.message ?? "Test falló";
+          addLine(false, message, {
+            expected: data.expected != null ? String(data.expected) : undefined,
+            actual: data.actual != null ? String(data.actual) : undefined,
+            hint: data.hint_on_fail,
+            description: data.description,
+          });
+        } catch {
+          addLine(false, "Test falló");
+        }
+      });
+
+      es.addEventListener("test_timeout", (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          addLine(false, `Test excedió el timeout (${data.timeout}ms)`);
+        } catch {
+          addLine(false, "Test excedió el timeout");
+        }
+      });
+
+      // Keep legacy event names for backward compatibility during transition
       es.addEventListener("test_pass", (event) => {
         try {
           const data = JSON.parse(event.data);
@@ -107,7 +162,10 @@ export function useTestRunner(
       es.addEventListener("test_fail", (event) => {
         try {
           const data = JSON.parse(event.data);
-          addLine(false, data.message ?? "Test falló");
+          addLine(false, data.message ?? "Test falló", {
+            expected: data.expected != null ? String(data.expected) : undefined,
+            actual: data.actual != null ? String(data.actual) : undefined,
+          });
         } catch {
           addLine(false, "Test falló");
         }
@@ -123,7 +181,7 @@ export function useTestRunner(
           // If results array exists, add individual test results
           if (data.results && Array.isArray(data.results)) {
             const resultLines: TestLine[] = data.results.map(
-              (r: TestResult, i: number) => ({
+              (r: { passed: boolean; message: string }, i: number) => ({
                 index: i,
                 passed: r.passed,
                 message: r.message,

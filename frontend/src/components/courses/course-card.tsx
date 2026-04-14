@@ -10,17 +10,17 @@ interface CourseCardProps {
 export function CourseCard({ course, progress }: CourseCardProps) {
   return (
     <Link href={`/courses/${course.slug}`}>
-      <div className="group rounded-xl border border-border bg-surface p-6 transition-colors duration-150 hover:border-text-dim cursor-pointer">
-        <div className="flex items-start justify-between">
-          <h3 className="text-lg font-semibold group-hover:text-primary transition-colors">{course.title}</h3>
-          <Badge variant="primary">{course.difficulty}</Badge>
+      <div className="group rounded-xl border border-border bg-surface p-7 transition-all duration-200 hover:border-primary/30 hover:scale-[1.01] cursor-pointer">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-xl font-semibold tracking-tight group-hover:text-primary transition-colors">{course.title}</h3>
+          <Badge variant="primary" className="shrink-0">{course.difficulty}</Badge>
         </div>
-        <p className="mt-2 text-sm text-text-muted line-clamp-2">{course.description}</p>
-        <div className="mt-4 flex items-center gap-2">
+        <p className="mt-3 text-sm text-text-muted line-clamp-2 leading-relaxed">{course.description}</p>
+        <div className="mt-5 flex items-center gap-2">
           <Badge>{course.language}</Badge>
         </div>
         {progress && (
-          <div className="mt-4">
+          <div className="mt-5">
             <div className="flex items-center justify-between text-xs text-text-muted">
               <span>{progress.lang} — {progress.completed}/{progress.total}</span>
               <span>{Math.round((progress.completed / progress.total) * 100)}%</span>

@@ -10,24 +10,28 @@ interface FaqItem {
 
 const faqs: FaqItem[] = [
   {
-    question: "¿Qué incluye el plan gratuito?",
-    answer: "Un proyecto completo con acceso al editor, pruebas automatizadas y todo el entorno de desarrollo. Perfecto para probar la plataforma.",
+    question: "¿En qué se diferencia de un bootcamp?",
+    answer: "No hay videos, no hay lectures, no hay instructor. Recibes una especificación técnica, un editor en el navegador y pruebas automatizadas. Tú decides cómo resolver cada problema — como en un equipo de ingeniería real.",
   },
   {
-    question: "¿Cómo funciona la verificación de estudiante?",
-    answer: "Verificamos tu estatus de estudiante con tu correo institucional (.edu.mx o similar). Una vez verificado, obtienes el precio de estudiante automáticamente.",
+    question: "¿Necesito instalar algo?",
+    answer: "No. El editor, el entorno de ejecución y las pruebas viven en tu navegador. Abres la página, eliges un proyecto y empiezas a escribir código.",
+  },
+  {
+    question: "¿Para qué nivel de experiencia es?",
+    answer: "Cada proyecto tiene submódulos que escalan en dificultad. Juniors construyen la implementación base. Seniors enfrentan concurrencia, optimización y edge cases. Tú avanzas a tu ritmo.",
+  },
+  {
+    question: "¿Qué incluye el plan gratuito?",
+    answer: "Un proyecto completo con editor, pruebas automatizadas y entorno de desarrollo. Sin restricciones artificiales.",
   },
   {
     question: "¿Cómo funciona la exportación a GitHub?",
-    answer: "Al completar un curso, generamos un repositorio presentable en tu cuenta de GitHub con tu historial de commits, README profesional y descripción del proyecto.",
-  },
-  {
-    question: "¿Cómo funciona la certificación?",
-    answer: "Al completar todos los submódulos de un curso, recibes una certificación verificable que puedes agregar directamente a tu perfil de LinkedIn.",
+    answer: "Al completar un proyecto, el repositorio aparece en tu cuenta de GitHub con tu historial de commits y README profesional.",
   },
   {
     question: "¿Puedo cancelar en cualquier momento?",
-    answer: "Sí. Sin contratos, sin preguntas. Cancelas y mantienes acceso hasta el final de tu periodo de facturación.",
+    answer: "Sí. Sin contratos, sin preguntas. Mantienes acceso hasta el final de tu periodo de facturación.",
   },
 ];
 
@@ -37,12 +41,14 @@ export function Faq() {
   return (
     <section className="px-6 py-24">
       <div className="mx-auto max-w-2xl">
-        <h2 className="text-center text-2xl font-bold">Preguntas frecuentes</h2>
-        <div className="mt-10 divide-y divide-border">
+        <h2 className="text-center text-3xl font-bold tracking-tight">
+          Preguntas <span className="font-serif italic text-primary">frecuentes</span>
+        </h2>
+        <div className="mt-12 divide-y divide-border">
           {faqs.map((faq, i) => (
             <div key={i}>
               <button
-                className="flex w-full items-center justify-between py-4 text-left text-sm font-medium hover:text-text-muted transition-colors"
+                className="flex w-full items-center justify-between py-5 text-left text-sm font-medium hover:text-text-muted transition-colors"
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
               >
                 {faq.question}

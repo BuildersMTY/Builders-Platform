@@ -45,22 +45,26 @@ export default async function CourseDetailPage({ params }: Props) {
           </Link>
         </div>
       </header>
-      <main className="mx-auto max-w-3xl px-6 py-12">
+      <main className="mx-auto max-w-3xl px-6 pt-16 pb-24">
         <Link href="/courses" className="inline-flex items-center gap-1.5 text-sm text-text-muted hover:text-text transition-colors">
           <ArrowLeft size={16} />
           Proyectos
         </Link>
-        <div className="mt-6">
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{firstVariant.title}</h1>
-            <Badge variant="primary">{firstVariant.difficulty}</Badge>
-          </div>
-          <p className="mt-3 text-text-muted">{firstVariant.description}</p>
-        </div>
         <div className="mt-10">
-          <h2 className="text-lg font-semibold">Elige un lenguaje</h2>
-          <p className="mt-1 text-sm text-text-muted">Selecciona en qué lenguaje quieres construir este proyecto.</p>
-          <div className="mt-6">
+          <div className="flex items-start gap-4">
+            <h1 className="text-4xl font-bold tracking-tight">{firstVariant.title}</h1>
+            <Badge variant="primary" className="mt-2 shrink-0">
+              <span className="font-serif italic">{firstVariant.difficulty}</span>
+            </Badge>
+          </div>
+          <p className="mt-4 text-lg text-text-muted leading-relaxed max-w-xl">{firstVariant.description}</p>
+        </div>
+        <div className="mt-14">
+          <h2 className="text-xl font-semibold">
+            Elige <span className="font-serif italic text-primary">tu</span> lenguaje
+          </h2>
+          <p className="mt-2 text-sm text-text-muted">Mismo proyecto, diferente lenguaje. Tú decides.</p>
+          <div className="mt-8">
             <LanguagePicker courseId={courseId} languages={languages} />
           </div>
         </div>

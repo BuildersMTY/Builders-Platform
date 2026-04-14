@@ -1,15 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
-import { EditorView, keymap, lineNumbers, highlightActiveLine } from "@codemirror/view";
+import { EditorView, keymap, lineNumbers, highlightActiveLine, placeholder } from "@codemirror/view";
 import { EditorState } from "@codemirror/state";
 import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
-import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { HighlightStyle, syntaxHighlighting, foldGutter, foldKeymap } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
 import { go } from "@codemirror/lang-go";
 import { python } from "@codemirror/lang-python";
 import { bracketMatching } from "@codemirror/language";
 import { closeBrackets } from "@codemirror/autocomplete";
+import { search, searchKeymap } from "@codemirror/search";
 
 // Buildmancer dark theme — #131111 bg with red accents
 const buildmancerTheme = EditorView.theme(
@@ -21,6 +22,7 @@ const buildmancerTheme = EditorView.theme(
     },
     ".cm-content": {
       caretColor: "#ff0000",
+      fontFamily: "var(--font-mono)",
     },
     ".cm-cursor, .cm-dropCursor": {
       borderLeftColor: "#ff0000",
@@ -30,13 +32,13 @@ const buildmancerTheme = EditorView.theme(
         backgroundColor: "rgba(255, 0, 0, 0.15)",
       },
     ".cm-gutters": {
-      backgroundColor: "#0d0d0d",
-      color: "#555555",
-      borderRight: "1px solid #1a1a1a",
+      backgroundColor: "#0c0a0a",
+      color: "#8a8a8a",
+      borderRight: "1px solid #2a2727",
     },
     ".cm-activeLineGutter": {
-      backgroundColor: "#1a1a1a",
-      color: "#888888",
+      backgroundColor: "#1e1c1c",
+      color: "#9a9a9a",
     },
     ".cm-activeLine": {
       backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -50,6 +52,38 @@ const buildmancerTheme = EditorView.theme(
     },
     ".cm-searchMatch.cm-searchMatch-selected": {
       backgroundColor: "rgba(255, 0, 0, 0.4)",
+    },
+    ".cm-foldGutter .cm-gutterElement": {
+      color: "#8a8a8a",
+      cursor: "pointer",
+    },
+    ".cm-foldGutter .cm-gutterElement:hover": {
+      color: "#9a9a9a",
+    },
+    // Search panel styling
+    ".cm-panels": {
+      backgroundColor: "#0c0a0a",
+      borderBottom: "1px solid #2a2727",
+      color: "#e0e0e0",
+    },
+    ".cm-panels input, .cm-panels button": {
+      backgroundColor: "#1e1c1c",
+      color: "#e0e0e0",
+      border: "1px solid #333",
+      borderRadius: "4px",
+      fontSize: "12px",
+    },
+    ".cm-panels button:hover": {
+      backgroundColor: "#2a2a2a",
+    },
+    ".cm-panels label": {
+      color: "#9a9a9a",
+      fontSize: "12px",
+    },
+    // Placeholder
+    ".cm-placeholder": {
+      color: "#4a4a4a",
+      fontStyle: "italic",
     },
   },
   { dark: true }
@@ -99,10 +133,14 @@ function getLanguageExtension(lang: string) {
   }
 }
 
+// Per-file state cache for cursor position and scroll
+const fileStateCache = new Map<string, { selection: { anchor: number; head: number }; scrollTop: number }>();
+
 export function Editor({ content, language, onChange }: EditorProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const onChangeRef = useRef(onChange);
+  const contentRef = useRef(content);
   onChangeRef.current = onChange;
 
   useEffect(() => {
@@ -116,7 +154,10 @@ export function Editor({ content, language, onChange }: EditorProps) {
         history(),
         bracketMatching(),
         closeBrackets(),
-        keymap.of([...defaultKeymap, ...historyKeymap]),
+        foldGutter(),
+        search(),
+        placeholder("// Empieza a implementar aquí..."),
+        keymap.of([...defaultKeymap, ...historyKeymap, ...foldKeymap, ...searchKeymap]),
         getLanguageExtension(language),
         buildmancerTheme,
         syntaxHighlighting(buildmancerHighlight),
@@ -131,7 +172,31 @@ export function Editor({ content, language, onChange }: EditorProps) {
     const view = new EditorView({ state, parent: containerRef.current });
     viewRef.current = view;
 
+    // Restore cached state for this file
+    const cached = fileStateCache.get(content.slice(0, 200)); // rough key
+    if (cached) {
+      try {
+        const docLen = view.state.doc.length;
+        if (cached.selection.anchor <= docLen && cached.selection.head <= docLen) {
+          view.dispatch({
+            selection: { anchor: cached.selection.anchor, head: cached.selection.head },
+          });
+        }
+        view.scrollDOM.scrollTop = cached.scrollTop;
+      } catch {
+        // Cached state doesn't match new content
+      }
+    }
+
     return () => {
+      // Save state before cleanup
+      const doc = view.state.doc.toString();
+      const key = doc.slice(0, 200);
+      const sel = view.state.selection.main;
+      fileStateCache.set(key, {
+        selection: { anchor: sel.anchor, head: sel.head },
+        scrollTop: view.scrollDOM.scrollTop,
+      });
       view.destroy();
       viewRef.current = null;
     };
@@ -149,7 +214,11 @@ export function Editor({ content, language, onChange }: EditorProps) {
   }, []);
 
   useEffect(() => {
-    updateContent(content);
+    // Only update if content changed externally (file switch)
+    if (content !== contentRef.current) {
+      contentRef.current = content;
+      updateContent(content);
+    }
   }, [content, updateContent]);
 
   return <div ref={containerRef} className="h-full overflow-auto" />;
