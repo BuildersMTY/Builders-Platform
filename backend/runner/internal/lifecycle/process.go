@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net"
 	"os/exec"
+	"runtime"
+	"strings"
 	"time"
 )
 
@@ -13,6 +15,11 @@ type Process struct {
 }
 
 func Spawn(ctx context.Context, command string, workDir string, env []string) (*Process, error) {
+	// On Windows, bash doesn't understand backslash paths — convert to forward slashes
+	if runtime.GOOS == "windows" {
+		command = strings.ReplaceAll(command, "\\", "/")
+		workDir = strings.ReplaceAll(workDir, "\\", "/")
+	}
 	cmd := exec.CommandContext(ctx, "bash", "-c", command)
 	cmd.Dir = workDir
 	if env != nil {
