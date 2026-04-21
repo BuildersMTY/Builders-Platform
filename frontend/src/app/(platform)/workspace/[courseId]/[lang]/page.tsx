@@ -60,7 +60,8 @@ export default function WorkspacePage() {
                 border: "1px solid #2a2727",
                 color: "#ffffff",
                 fontSize: "12px",
-                borderRadius: "9999px",
+                borderRadius: "2px",
+                fontFamily: "var(--font-mono)",
               },
             }}
           />

@@ -25,20 +25,22 @@ function RailButton({ icon, active, accent, pulse, large, onClick, label, shortc
       onClick={onClick}
       title={title}
       aria-label={label}
-      className={`relative flex ${large ? "h-14 w-full flex-col gap-1" : caption ? "h-11 w-full flex-col gap-0.5" : "h-9 w-9"} items-center justify-center rounded-lg transition-colors duration-150 ${
+      className={`group relative flex ${large ? "h-12 w-full flex-col gap-0.5" : caption ? "h-10 w-full flex-col gap-0.5" : "h-8 w-8"} items-center justify-center transition-colors duration-150 ${
         accent
           ? "bg-primary text-white hover:bg-primary-hover"
           : active
-            ? "bg-primary-subtle text-text"
+            ? "bg-bg text-text"
             : "text-text-dim hover:text-text-muted hover:bg-surface-hover"
       }`}
     >
       {icon}
       {caption && (
-        <span className={`text-[10px] leading-none text-center select-none ${active ? "text-text-muted" : ""}`}>{caption}</span>
+        <span className={`font-mono text-[9px] uppercase tracking-[0.08em] leading-none select-none ${active ? "text-text" : ""}`}>
+          {caption}
+        </span>
       )}
       {pulse && (
-        <span className="absolute inset-0 rounded-lg border-2 border-primary animate-runPulse" />
+        <span className="pointer-events-none absolute inset-0 border border-primary animate-runPulse" />
       )}
     </button>
   );
@@ -92,51 +94,51 @@ export function IconRail() {
     <div
       ref={containerRef}
       onKeyDown={handleToolbarKeyDown}
-      className="flex h-full w-16 flex-col items-center gap-1.5 bg-surface border-r border-border px-1.5 py-4"
+      className="flex h-full w-14 flex-col items-center gap-0.5 bg-surface border-r border-border py-2"
       role="toolbar"
       aria-label="Workspace toolbar"
     >
       <RailButton
-        icon={<Package size={17} />}
+        icon={<Package size={15} strokeWidth={1.5} />}
         active={isActive("modules")}
         onClick={() => togglePanel("modules")}
         label="Módulos"
-        caption="Módulos"
+        caption="modules"
         shortcut="Ctrl+1"
       />
       <RailButton
-        icon={<FolderOpen size={17} />}
+        icon={<FolderOpen size={15} strokeWidth={1.5} />}
         active={isActive("files")}
         onClick={() => togglePanel("files")}
         label="Archivos"
-        caption="Archivos"
+        caption="files"
         shortcut="Ctrl+2"
       />
       <RailButton
-        icon={<BookOpen size={17} />}
+        icon={<BookOpen size={15} strokeWidth={1.5} />}
         active={isActive("resources")}
         onClick={() => togglePanel("resources")}
         label="Recursos"
-        caption="Recursos"
+        caption="docs"
         shortcut="Ctrl+3"
       />
       <div className="flex-1" />
-      <div className="w-8 border-t border-border mb-2" />
+      <div className="w-8 border-t border-border my-1.5" />
       <RailButton
-        icon={<Play size={20} />}
+        icon={<Play size={18} strokeWidth={1.75} />}
         accent
         large
         pulse={neverRun}
         onClick={() => window.dispatchEvent(new CustomEvent("buildmancer:run-tests"))}
         label="Ejecutar pruebas"
-        caption="Ejecutar"
+        caption="run"
         shortcut="Ctrl+Enter"
       />
       <RailButton
-        icon={<Home size={17} />}
+        icon={<Home size={15} strokeWidth={1.5} />}
         onClick={() => router.push("/courses")}
         label="Volver a proyectos"
-        caption="Inicio"
+        caption="exit"
       />
     </div>
   );

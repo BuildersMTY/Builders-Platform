@@ -1,0 +1,3 @@
+# Buildmancer (BuildersMTY Plataforma de cursos)
+
+Buildmancer es una plataforma de cursos estilo Codecrafters pero orientada al publico latino. Accede a proyectos practicos de alta calidad en tu navegador, sin descargar dependencias ni perder tiempo configurando tu entorno. Conecta tu Github, escoge tu dificultad, y tu lenguage de programación. Termina el proyecto con un repositorio en tu perfil de github listo para añadir a tu CV y un certificado de completado para compartir en Linkedin.

@@ -52,7 +52,7 @@ export function Panel() {
   return (
     <>
       <div
-        className="h-full flex-shrink-0 overflow-y-auto border-r border-border bg-surface shadow-[2px_0_12px_rgba(0,0,0,0.25)] transition-none"
+        className="h-full flex-shrink-0 overflow-y-auto border-r border-border bg-surface transition-none"
         style={{ width: `${width}px` }}
       >
         {panelView === "modules" && <ModuleList />}
@@ -90,29 +90,31 @@ function StagedResourceList() {
   );
 
   return (
-    <div className="p-4">
-      <h4 className="text-base tracking-tight">
-        <span className="font-serif italic text-primary">Recursos</span>
-      </h4>
+    <div className="flex flex-col">
+      <div className="flex h-7 items-center border-b border-border px-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-text-dim">
+          resources
+        </span>
+      </div>
 
-      <div className="mt-3 flex flex-col gap-1">
+      <div className="flex flex-col py-1">
         {visible.length === 0 && locked.length === 0 && (
-          <p className="text-xs text-text-dim">Sin recursos para este submódulo.</p>
+          <p className="px-3 py-2 text-[11px] text-text-dim">Sin recursos para este submódulo.</p>
         )}
 
         {visible.map((r) => (
           <button
             key={r.file}
             onClick={() => openResourceTab(r.file, r.title)}
-            className="flex items-center gap-2 rounded-md px-2 py-1.5 text-left text-xs text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
+            className="flex items-center gap-2 px-3 py-1 text-left text-[12px] text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
           >
-            <BookOpen size={12} className="flex-shrink-0 text-warning/60" />
+            <BookOpen size={11} strokeWidth={1.5} className="flex-shrink-0 text-text-dim" />
             <span className="truncate">{r.title}</span>
           </button>
         ))}
 
         {locked.length > 0 && (
-          <div className="mt-2 border-t border-border pt-2">
+          <div className="mt-1 border-t border-border pt-1">
             {locked.map((r) => {
               const stage = getResourceStage(r.type);
               const hint =
@@ -124,12 +126,14 @@ function StagedResourceList() {
               return (
                 <div
                   key={r.file}
-                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-text-dim/50"
+                  className="flex items-center gap-2 px-3 py-1 text-[12px] text-text-dim/60"
                   title={hint}
                 >
-                  <BookOpen size={12} className="flex-shrink-0" />
+                  <BookOpen size={11} strokeWidth={1.5} className="flex-shrink-0" />
                   <span className="truncate">{r.title}</span>
-                  <span className="ml-auto text-[10px] flex-shrink-0 opacity-40">bloqueado</span>
+                  <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.08em] flex-shrink-0 opacity-50">
+                    locked
+                  </span>
                 </div>
               );
             })}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { enroll } from "@/lib/api";
 import { useState } from "react";
+import { enroll } from "@/lib/api";
 
-interface LanguageOption {
+export interface LanguageOption {
   lang: string;
   enrolled: boolean;
   progress?: { completed: number; total: number };
@@ -15,52 +15,104 @@ interface LanguagePickerProps {
   languages: LanguageOption[];
 }
 
+// Segmented language selector + single decisive CTA.
+// - Segmented control (not a <select>), monospace, mechanical.
+// - One red element on the page: the Comenzar / Continuar button.
 export function LanguagePicker({ courseId, languages }: LanguagePickerProps) {
   const router = useRouter();
-  const [loading, setLoading] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string>(languages[0]?.lang ?? "");
+  const [loading, setLoading] = useState(false);
 
-  async function handleSelect(lang: string, enrolled: boolean) {
-    if (enrolled) {
-      router.push(`/workspace/${courseId}/${lang}`);
+  const active = languages.find((l) => l.lang === selected) ?? languages[0];
+  if (!active) return null;
+
+  const label = active.enrolled ? "Continuar" : "Comenzar a construir";
+
+  async function handleGo() {
+    if (!active) return;
+    if (active.enrolled) {
+      router.push(`/workspace/${courseId}/${active.lang}`);
       return;
     }
-    setLoading(lang);
+    setLoading(true);
     try {
-      await enroll(courseId, lang);
-      router.push(`/workspace/${courseId}/${lang}`);
-    } catch (err) {
-      router.push(`/workspace/${courseId}/${lang}`);
+      await enroll(courseId, active.lang);
+    } catch {
+      // enrollment may already exist — proceed regardless
     } finally {
-      setLoading(null);
+      router.push(`/workspace/${courseId}/${active.lang}`);
     }
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {languages.map((opt) => (
+    <div className="flex flex-col gap-5">
+      <div
+        role="tablist"
+        aria-label="Lenguaje"
+        className="inline-flex w-full flex-wrap items-stretch gap-0 overflow-hidden rounded-md border border-border bg-surface/60 p-0.5"
+      >
+        {languages.map((opt) => {
+          const isActive = opt.lang === selected;
+          return (
+            <button
+              key={opt.lang}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setSelected(opt.lang)}
+              className={[
+                "relative flex-1 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-150",
+                isActive
+                  ? "bg-surface-hover text-text"
+                  : "text-text-dim hover:text-text",
+              ].join(" ")}
+            >
+              <span className="flex items-center justify-center gap-2">
+                <span>{opt.lang}</span>
+                {opt.enrolled && opt.progress && (
+                  <span
+                    className={[
+                      "font-mono text-[10px] tabular-nums tracking-normal",
+                      isActive ? "text-text-muted" : "text-text-dim",
+                    ].join(" ")}
+                  >
+                    {opt.progress.completed}/{opt.progress.total}
+                  </span>
+                )}
+              </span>
+              {isActive && (
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-3 -bottom-px h-px bg-text/50"
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="flex flex-wrap items-center gap-4">
         <button
-          key={opt.lang}
-          onClick={() => handleSelect(opt.lang, opt.enrolled)}
-          disabled={loading !== null}
-          className="flex flex-col rounded-xl border border-border bg-surface p-7 text-left transition-all duration-200 hover:border-primary/30 disabled:opacity-50"
+          onClick={handleGo}
+          disabled={loading}
+          className="group inline-flex items-center gap-3 bg-primary px-6 py-3.5 font-sans text-sm font-medium text-text transition-all duration-150 hover:bg-primary-hover disabled:opacity-60"
         >
-          <span className="text-xl font-bold capitalize tracking-tight">{opt.lang}</span>
-          {opt.enrolled && opt.progress ? (
-            <div className="mt-4 w-full">
-              <div className="flex justify-between text-xs text-text-muted">
-                <span>{opt.progress.completed}/{opt.progress.total} submodulos</span>
-                <span>{Math.round((opt.progress.completed / opt.progress.total) * 100)}%</span>
-              </div>
-              <div className="mt-1.5 h-1.5 rounded-full bg-surface-hover">
-                <div className="h-full rounded-full bg-primary" style={{ width: `${(opt.progress.completed / opt.progress.total) * 100}%` }} />
-              </div>
-              <span className="mt-4 inline-block text-sm font-medium text-primary">Continuar</span>
-            </div>
-          ) : (
-            <span className="mt-4 text-sm text-text-muted">{loading === opt.lang ? "Inscribiendo..." : "Comenzar"}</span>
-          )}
+          <span>{loading ? "Inscribiendo..." : label}</span>
+          <span
+            aria-hidden
+            className="font-mono text-xs tracking-tight transition-transform duration-200 group-hover:translate-x-0.5"
+          >
+            &rarr;
+          </span>
         </button>
-      ))}
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-text-dim">
+          en {active.lang}
+          {active.enrolled && active.progress && (
+            <span className="ml-2 text-text-muted">
+              &middot; {active.progress.completed}/{active.progress.total} submodulos
+            </span>
+          )}
+        </span>
+      </div>
     </div>
   );
 }

@@ -3,84 +3,104 @@ import { TerminalAnimation } from "./terminal-animation";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[85dvh] items-center px-6 pt-24 pb-16">
-      {/* Ambient red glow */}
+    <section className="relative overflow-hidden">
+      {/* Single ambient red — stays far-right so it never competes with the CTA red */}
       <div
+        aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 70% 50% at 70% 50%, rgba(255, 0, 0, 0.04) 0%, transparent 70%)",
+            "radial-gradient(ellipse 55% 40% at 85% 35%, rgba(255,0,0,0.045) 0%, transparent 70%)",
         }}
       />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-6xl gap-16 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
-        {/* Copy */}
-        <div>
-          <h1
-            className="hero-animate font-semibold tracking-tight"
-            style={{ animationDelay: "0.1s", fontSize: "clamp(2.75rem, 1.5rem + 4.5vw, 5.5rem)", lineHeight: 1.05 }}
-          >
-            <span className="block">
-              Construye software{" "}
-              <span className="font-serif italic text-primary">real</span>.
-            </span>
-            <span className="mt-2 block">
-              Aprende de{" "}
-              <span className="font-serif italic text-primary">verdad</span>.
-            </span>
-          </h1>
+      <div className="relative mx-auto grid max-w-[1200px] grid-cols-12 gap-x-6 gap-y-16 px-6 pt-32 pb-24 lg:pt-40 lg:pb-32">
+        {/* Dateline — editorial signal */}
+        <div
+          className="hero-animate col-span-12 flex items-center gap-4 text-[11px] uppercase tracking-[0.22em] text-text-dim"
+          style={{ animationDelay: "0s" }}
+        >
+          <span className="font-mono">MX · 2026</span>
+          <span className="h-px w-8 bg-border" />
+          <span>Una plataforma de ingeniería, no un curso</span>
+        </div>
 
-          {/* Architectural red bar — not a subtle line, a statement */}
-          <div
-            className="hero-animate mt-10 flex items-center gap-4"
-            style={{ animationDelay: "0.3s" }}
-          >
-            <div className="h-[3px] w-16 bg-primary" />
-            <div className="h-[3px] w-4 bg-primary/40" />
-          </div>
+        {/* Headline — serif display, asymmetric, hangs into the grid */}
+        <h1
+          className="hero-animate col-span-12 font-semibold tracking-tight lg:col-span-11"
+          style={{
+            animationDelay: "0.1s",
+            fontSize: "clamp(2.75rem, 1.1rem + 5.6vw, 6.25rem)",
+            lineHeight: 0.98,
+            letterSpacing: "-0.02em",
+          }}
+        >
+          <span className="block">Escribe el código.</span>
+          <span className="block pl-[0.6em] text-text-muted">
+            Pasa las pruebas.
+          </span>
+          <span className="mt-1 block font-serif italic text-primary">
+            Llévatelo a GitHub.
+          </span>
+        </h1>
 
+        {/* Copy + CTA — narrow column, offset right */}
+        <div className="col-span-12 lg:col-span-5 lg:col-start-1">
           <p
-            className="hero-animate mt-8 max-w-md text-base text-text-muted"
-            style={{ animationDelay: "0.4s", lineHeight: 1.7 }}
+            className="hero-animate max-w-md text-[15px] text-text-muted"
+            style={{ animationDelay: "0.35s", lineHeight: 1.7 }}
           >
-            Sin instalar nada. Abre el editor, escribe código y ejecuta pruebas
-            — todo en tu navegador. Tu proyecto terminado va directo a tu GitHub.
-          </p>
-          <p
-            className="hero-animate mt-4 max-w-md text-base text-text-muted"
-            style={{ animationDelay: "0.45s", lineHeight: 1.7 }}
-          >
-            HTTP servers, DNS resolvers, clientes Git. Los mismos retos que resuelven
-            ingenieros en producción. No es un bootcamp — es práctica de ingeniería real.
+            Proyectos con especificación de ingeniería real — HTTP servers,
+            resolvers DNS, clientes Git — resueltos desde el navegador. Sin
+            setup, sin videos, sin hand-holding. Entregas código que corre.
           </p>
 
           <div
-            className="hero-animate mt-12 flex items-center gap-6"
-            style={{ animationDelay: "0.6s" }}
+            className="hero-animate mt-10 flex items-center gap-7"
+            style={{ animationDelay: "0.55s" }}
           >
             <Link
               href="/courses"
-              className="inline-flex items-center rounded-full bg-primary px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
+              className="group inline-flex items-center gap-3 rounded-full border border-text/90 bg-text px-7 py-3 text-[13px] font-medium tracking-wide text-bg transition-colors duration-200 hover:border-text hover:bg-transparent hover:text-text"
             >
-              Empieza a construir
+              <span>Abrir el editor</span>
+              <span
+                aria-hidden
+                className="inline-block h-px w-4 bg-bg transition-all duration-200 group-hover:w-6 group-hover:bg-text"
+              />
             </Link>
             <a
               href="#como-funciona"
-              className="text-sm text-text-muted transition-colors hover:text-text"
+              className="group inline-flex items-center gap-2 text-[13px] text-text-muted transition-colors duration-200 hover:text-text"
             >
-              Cómo funciona
+              <span>Cómo funciona</span>
+              <span
+                aria-hidden
+                className="h-px w-8 bg-border transition-all duration-200 group-hover:w-12 group-hover:bg-text"
+              />
             </a>
           </div>
         </div>
 
-        {/* Terminal */}
-        <div
-          className="hero-animate mx-auto w-full max-w-lg lg:mx-0 lg:max-w-none"
-          style={{ animationDelay: "0.5s" }}
+        {/* Terminal — right-column, captioned like a figure */}
+        <figure
+          className="hero-animate col-span-12 lg:col-span-7 lg:col-start-6 lg:row-start-3 lg:-mt-8"
+          style={{ animationDelay: "0.45s" }}
         >
           <TerminalAnimation />
-        </div>
+          <figcaption className="mt-3 flex items-baseline justify-between font-mono text-[11px] text-text-dim">
+            <span>
+              <span className="text-text-muted">Fig. 01</span>{" "}
+              <span className="text-border">/</span> Suite de pruebas
+              ejecutándose en el runner.
+            </span>
+            <span className="hidden sm:inline">go · http-server · 01</span>
+          </figcaption>
+        </figure>
       </div>
+
+      {/* Column rule — architectural, sits at the bottom of the hero */}
+      <div className="mx-auto h-px max-w-[1200px] bg-border" />
     </section>
   );
 }

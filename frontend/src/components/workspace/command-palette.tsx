@@ -201,14 +201,14 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-black/50"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-bg/70"
       role="dialog"
       aria-modal="true"
       aria-label="Buscar"
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-surface shadow-2xl animate-overlayIn backdrop-blur-md"
+        className="w-full max-w-md overflow-hidden border border-border bg-surface animate-overlayIn"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={(e) => {
           if (e.key === "Tab") {
@@ -217,8 +217,8 @@ export function CommandPalette() {
         }}
       >
         {/* Search input */}
-        <div className="flex items-center gap-2 border-b border-border px-3 py-2.5">
-          <Search size={14} className="text-text-dim flex-shrink-0" />
+        <div className="flex items-center gap-2 border-b border-border px-3 h-10">
+          <Search size={13} strokeWidth={1.75} className="text-text-dim flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -228,30 +228,30 @@ export function CommandPalette() {
               setSelected(0);
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Buscar archivos, submódulos, acciones..."
-            className="flex-1 bg-transparent text-sm text-text placeholder:text-text-dim outline-none"
+            placeholder="files, submodules, actions..."
+            className="flex-1 bg-transparent font-mono text-[13px] text-text placeholder:text-text-dim outline-none"
             role="combobox"
             aria-expanded="true"
             aria-controls="command-results"
             aria-activedescendant={filtered[selected] ? `cmd-${filtered[selected].id}` : undefined}
             aria-autocomplete="list"
           />
-          <kbd className="rounded border border-border px-1.5 py-0.5 text-[10px] text-text-dim">
+          <kbd className="border border-border px-1.5 py-px font-mono text-[10px] text-text-dim">
             esc
           </kbd>
         </div>
 
         {/* Results */}
-        <div id="command-results" role="listbox" className="max-h-[300px] overflow-y-auto py-1">
+        <div id="command-results" role="listbox" className="max-h-[320px] overflow-y-auto py-1">
           {filtered.length === 0 && (
-            <p className="px-3 py-4 text-center text-xs text-text-dim">
-              Sin resultados
+            <p className="px-3 py-4 text-center font-mono text-[11px] text-text-dim">
+              no results
             </p>
           )}
           {groups.map((group) => (
             <div key={group.category}>
-              <div className="px-3 pt-2 pb-1 text-[11px] tracking-tight text-text-dim">
-                <span className="font-serif italic">{group.category}</span>
+              <div className="px-3 pt-2 pb-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-text-dim">
+                {group.category.toLowerCase()}
               </div>
               {group.items.map((cmd) => (
                 <button
@@ -264,9 +264,9 @@ export function CommandPalette() {
                     setOpen(false);
                   }}
                   onMouseEnter={() => setSelected(cmd.globalIdx)}
-                  className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-left text-xs transition-colors ${
+                  className={`flex w-full items-center gap-2.5 px-3 py-1.5 text-left font-mono text-[12px] transition-colors ${
                     cmd.globalIdx === selected
-                      ? "bg-primary-subtle text-text"
+                      ? "bg-bg text-text"
                       : "text-text-muted hover:bg-surface-hover"
                   }`}
                 >

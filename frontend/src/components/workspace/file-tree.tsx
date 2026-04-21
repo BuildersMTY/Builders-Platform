@@ -74,11 +74,16 @@ export function FileTree() {
   const tree = buildTree(files.map((f) => f.filepath));
 
   return (
-    <div className="p-4">
-      <h4 className="text-base tracking-tight">
-        <span className="font-serif italic text-primary">Archivos</span>
-      </h4>
-      <div className="mt-3 flex flex-col gap-0.5" role="tree" aria-label="File tree">
+    <div className="flex flex-col">
+      <div className="flex h-7 items-center justify-between border-b border-border px-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-text-dim">
+          files
+        </span>
+        <span className="font-mono text-[10px] tabular-nums text-text-dim/70">
+          {files.length}
+        </span>
+      </div>
+      <div className="flex flex-col py-1" role="tree" aria-label="File tree">
         {tree.map((node) => (
           <TreeNodeView
             key={node.path}
@@ -112,26 +117,32 @@ function TreeNodeView({
   const isStub = node.type === "file" && stubPaths.has(node.path);
 
   if (node.type === "file") {
+    const isActive = activeFile === node.path;
     return (
       <button
         onClick={() => onFileClick(node.path)}
-        className={`flex items-center gap-1.5 rounded-md py-1.5 text-left text-xs transition-colors ${
-          activeFile === node.path
-            ? "bg-primary-subtle text-text"
+        className={`group flex items-center gap-1.5 py-0.5 text-left font-mono text-[12px] transition-colors ${
+          isActive
+            ? "bg-bg text-text"
             : isStub
               ? "text-text-muted hover:bg-surface-hover hover:text-text"
               : "text-text-dim hover:bg-surface-hover hover:text-text-muted"
         }`}
-        style={{ paddingLeft: `${depth * 12 + 8}px`, paddingRight: "8px" }}
+        style={{ paddingLeft: `${depth * 12 + 10}px`, paddingRight: "10px" }}
         role="treeitem"
-        aria-selected={activeFile === node.path}
+        aria-selected={isActive}
       >
-        {/* Stub indicator dot */}
+        <File size={11} strokeWidth={1.5} className="flex-shrink-0 opacity-60" />
+        <span className="truncate">{node.name}</span>
+        {/* Stub marker — dim dot, promoted on hover to primary ONLY if active */}
         {isStub && (
-          <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+          <span
+            className={`ml-auto h-1 w-1 flex-shrink-0 rounded-full ${
+              isActive ? "bg-primary" : "bg-text-dim/60"
+            }`}
+            aria-label="Stub file"
+          />
         )}
-        <File size={13} className="flex-shrink-0" />
-        {node.name}
       </button>
     );
   }
@@ -140,23 +151,24 @@ function TreeNodeView({
     <div role="group">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex w-full items-center gap-1.5 rounded-md py-1.5 text-left text-xs text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
-        style={{ paddingLeft: `${depth * 12 + 8}px`, paddingRight: "8px" }}
+        className="flex w-full items-center gap-1 py-0.5 text-left font-mono text-[12px] text-text-muted hover:bg-surface-hover hover:text-text transition-colors"
+        style={{ paddingLeft: `${depth * 12 + 4}px`, paddingRight: "10px" }}
         aria-expanded={expanded}
         role="treeitem"
       >
         <ChevronRight
-          size={12}
-          className={`flex-shrink-0 transition-transform duration-150 ${
+          size={11}
+          strokeWidth={1.75}
+          className={`flex-shrink-0 text-text-dim transition-transform duration-150 ${
             expanded ? "rotate-90" : ""
           }`}
         />
         {expanded ? (
-          <FolderOpen size={13} className="flex-shrink-0 text-primary" />
+          <FolderOpen size={11} strokeWidth={1.5} className="flex-shrink-0 text-text-dim" />
         ) : (
-          <Folder size={13} className="flex-shrink-0 text-primary" />
+          <Folder size={11} strokeWidth={1.5} className="flex-shrink-0 text-text-dim" />
         )}
-        {node.name}
+        <span className="truncate">{node.name}</span>
       </button>
       {expanded && node.children && (
         <div>

@@ -61,15 +61,15 @@ export function ContextBar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Progress pill */}
+      {/* Progress meter — flat line, monospace counter */}
       {totalSubmodules > 0 && (
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-[10px] tabular-nums text-text-dim">
+          <span className="font-mono text-[10px] tabular-nums text-text-dim">
             {completedCount}/{totalSubmodules}
           </span>
-          <div className="w-16 h-1 rounded-full bg-surface-hover overflow-hidden">
+          <div className="h-[3px] w-20 bg-surface-hover overflow-hidden">
             <div
-              className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+              className="h-full bg-primary transition-all duration-500 ease-out"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -77,7 +77,7 @@ export function ContextBar() {
       )}
 
       {/* Command palette trigger */}
-      <kbd className="hidden lg:inline rounded border border-border px-1.5 py-0.5 text-[10px] text-text-dim flex-shrink-0 cursor-pointer hover:border-text-dim hover:text-text-muted transition-colors"
+      <kbd className="hidden lg:inline border border-border px-1.5 py-0.5 font-mono text-[10px] text-text-dim flex-shrink-0 cursor-pointer hover:border-text-dim hover:text-text-muted transition-colors"
            onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true }))}
       >
         Ctrl+K
@@ -144,15 +144,15 @@ function ShortcutHelp() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1.5 z-50 w-56 rounded-lg border border-border bg-surface shadow-lg p-3">
-          <p className="text-[10px] font-medium text-text-muted mb-2 uppercase tracking-wide">
-            Atajos de teclado
+        <div className="absolute right-0 top-full mt-1 z-50 w-60 border border-border bg-surface p-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.14em] text-text-dim mb-2">
+            Atajos
           </p>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-1">
             {SHORTCUTS.map(({ keys, desc }) => (
-              <div key={keys} className="flex items-center justify-between gap-2">
-                <span className="text-[11px] text-text-dim">{desc}</span>
-                <kbd className="rounded border border-border px-1.5 py-0.5 text-[10px] text-text-muted bg-surface-hover flex-shrink-0">
+              <div key={keys} className="flex items-center justify-between gap-2 py-0.5">
+                <span className="text-[11px] text-text-muted">{desc}</span>
+                <kbd className="border border-border px-1.5 py-px font-mono text-[10px] text-text-muted flex-shrink-0">
                   {keys}
                 </kbd>
               </div>

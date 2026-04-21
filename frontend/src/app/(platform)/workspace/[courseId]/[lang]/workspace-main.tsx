@@ -145,16 +145,18 @@ export function WorkspaceMain() {
               </div>
             )
           ) : (
-            <div className="flex flex-1 items-center justify-center">
-              <div className="rounded-xl p-10 text-center max-w-xs">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-surface-hover">
-                  <File size={20} className="text-text-dim" />
-                </div>
-                <p className="text-sm font-medium text-text-muted">
-                  Selecciona un archivo para editar
+            <div className="flex flex-1 items-center justify-center bg-bg">
+              <div className="max-w-xs text-center">
+                <File size={18} className="mx-auto mb-3 text-text-dim/60" strokeWidth={1.5} />
+                <p className="font-mono text-[11px] text-text-muted tracking-tight">
+                  no file open
                 </p>
-                <p className="mt-2 text-xs text-text-dim leading-relaxed">
-                  Haz click en los archivos del task brief o abre el panel de archivos con <kbd className="rounded border border-border px-1 py-0.5 text-[10px]">Ctrl+2</kbd>
+                <p className="mt-2 text-[11px] text-text-dim leading-relaxed">
+                  Open the files panel{" "}
+                  <kbd className="border border-border px-1 py-px font-mono text-[10px] text-text-muted">
+                    Ctrl+2
+                  </kbd>
+                  {" "}or click a stub in the task brief
                 </p>
               </div>
             </div>

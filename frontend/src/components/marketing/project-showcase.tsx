@@ -1,71 +1,94 @@
+import Link from "next/link";
 import type { CourseSummary } from "@/lib/types";
-
-const LANG_ACCENTS: Record<string, string> = {
-  go: "from-[#00ADD8]/[0.10]",
-  python: "from-[#3776AB]/[0.10]",
-  javascript: "from-[#F7DF1E]/[0.07]",
-  typescript: "from-[#3178C6]/[0.10]",
-  rust: "from-[#CE422B]/[0.10]",
-};
 
 interface ProjectShowcaseProps {
   courses: CourseSummary[];
+}
+
+function hoursLine(h: CourseSummary["estimated_hours"]): string {
+  return `${h.junior}h · ${h.mid}h · ${h.senior}h`;
 }
 
 export function ProjectShowcase({ courses }: ProjectShowcaseProps) {
   if (courses.length === 0) return null;
 
   return (
-    <section id="proyectos" className="px-6 py-24">
-      <div className="mx-auto max-w-6xl">
-        <p className="text-sm font-medium uppercase tracking-widest text-text-dim">
-          Proyectos
-        </p>
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
-          Lo que <span className="font-serif italic text-primary">construirás</span>
-        </h2>
+    <section id="proyectos" className="px-6 py-28 md:py-36">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Section head — wide, asymmetric */}
+        <div className="grid grid-cols-12 items-end gap-x-6 pb-20">
+          <p className="col-span-12 font-mono text-[11px] uppercase tracking-[0.22em] text-text-dim md:col-span-8">
+            § Índice de proyectos
+          </p>
+          <h2
+            className="col-span-12 mt-4 font-semibold tracking-tight md:col-span-9 md:mt-6"
+            style={{
+              fontSize: "clamp(2rem, 1rem + 3vw, 3.75rem)",
+              lineHeight: 1.02,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Problemas que se{" "}
+            <span className="font-serif italic">resuelven en producción.</span>
+          </h2>
+        </div>
 
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
+        {/* Ruled index — each row is a project. No cards, no gradients. */}
+        <ol className="divide-y divide-border border-y border-border">
           {courses.map((course, i) => {
-            const accent =
-              LANG_ACCENTS[course.language.toLowerCase()] ||
-              "from-primary/[0.07]";
+            const idx = String(i + 1).padStart(2, "0");
             return (
-              <div
-                key={course.slug}
-                className={`group relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br ${accent} to-transparent p-8 transition-all duration-500 hover:border-white/[0.12] hover:shadow-lg hover:shadow-black/20 ${
-                  i === 0 ? "md:col-span-2 md:p-10" : ""
-                }`}
-              >
-                <p className="text-[11px] font-medium uppercase tracking-widest text-text-dim">
-                  {course.language} · {course.difficulty}
-                </p>
-                <h3
-                  className={`mt-2 font-semibold tracking-tight transition-colors group-hover:text-primary ${
-                    i === 0 ? "text-2xl md:text-3xl" : "text-xl"
-                  }`}
+              <li key={course.slug}>
+                <Link
+                  href={`/courses/${course.slug}`}
+                  className="group grid grid-cols-12 items-start gap-x-6 gap-y-3 px-1 py-8 transition-colors duration-200 hover:bg-surface-alt/40 md:py-10"
                 >
-                  {course.title}
-                </h3>
-                <p
-                  className={`mt-3 text-sm leading-relaxed text-text-muted ${
-                    i === 0 ? "max-w-xl" : "line-clamp-2"
-                  }`}
-                >
-                  {course.description}
-                </p>
-                <div className="mt-6 flex items-center">
-                  <span className="text-xs font-medium text-text-dim transition-colors group-hover:text-primary">
-                    Comenzar proyecto
+                  {/* Numeral */}
+                  <span className="col-span-2 font-mono text-[11px] tracking-wide text-text-dim md:col-span-1">
+                    {idx}
                   </span>
-                  <span className="ml-1.5 text-text-dim transition-all group-hover:translate-x-1 group-hover:text-primary">
-                    &rarr;
+
+                  {/* Title + description */}
+                  <div className="col-span-10 md:col-span-6">
+                    <h3 className="font-semibold tracking-tight transition-colors duration-200 group-hover:text-text md:text-[22px]">
+                      {course.title}
+                    </h3>
+                    <p
+                      className="mt-2 max-w-xl text-[14px] text-text-muted"
+                      style={{ lineHeight: 1.65 }}
+                    >
+                      {course.description}
+                    </p>
+                  </div>
+
+                  {/* Metadata column — monospace, right-aligned on desktop */}
+                  <div className="col-span-12 flex flex-col gap-1 font-mono text-[11px] tracking-wide text-text-dim md:col-span-4 md:col-start-9 md:items-end md:text-right">
+                    <span className="uppercase">
+                      {course.language} · {course.difficulty}
+                    </span>
+                    <span>{hoursLine(course.estimated_hours)}</span>
+                  </div>
+
+                  {/* Affordance — a single rule that extends on hover */}
+                  <span
+                    aria-hidden
+                    className="col-span-12 mt-2 flex items-center gap-3 text-[11px] text-text-dim transition-colors duration-200 group-hover:text-text md:col-span-11 md:col-start-2"
+                  >
+                    <span className="h-px w-8 bg-border transition-all duration-300 group-hover:w-16 group-hover:bg-text-muted" />
+                    <span className="uppercase tracking-[0.22em]">
+                      Comenzar
+                    </span>
                   </span>
-                </div>
-              </div>
+                </Link>
+              </li>
             );
           })}
-        </div>
+        </ol>
+
+        <p className="mt-10 font-mono text-[11px] tracking-wide text-text-dim">
+          Más proyectos se agregan mensualmente. Sugerencias de especificación
+          abiertas en el repo.
+        </p>
       </div>
     </section>
   );

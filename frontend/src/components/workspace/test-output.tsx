@@ -126,85 +126,82 @@ export function TestOutput() {
     <div className="flex flex-col flex-shrink-0">
       <ResizeHandle direction="vertical" onResize={handleResize} />
       <div
-        className={`border-t border-border flex flex-col animate-slideUp shadow-[0_-4px_16px_rgba(0,0,0,0.2)] ${
-          displayAllPassed === true
-            ? "bg-success/[0.06]"
-            : "bg-surface"
-        }`}
+        className="border-t border-border bg-surface flex flex-col animate-slideUp"
         style={{ height: `${testPanelHeight}px` }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-border px-4 py-2.5 flex-shrink-0">
-          <div className="flex items-center gap-2">
-            <span className="text-base tracking-tight">
-              <span className="font-serif italic text-primary">Resultados</span>
+        {/* Header — single-row context strip */}
+        <div className="flex h-7 items-center justify-between border-b border-border px-3 flex-shrink-0">
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-text-dim">
+              tests
             </span>
             {status === "running" && (
-              <Loader2 size={12} className="animate-spin text-text-muted" />
+              <span className="flex items-center gap-1.5 font-mono text-[10px] text-text-muted">
+                <Loader2 size={10} strokeWidth={1.75} className="animate-spin" />
+                running
+              </span>
             )}
             {displayStatus === "done" && totalCount > 0 && (
               <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
-                  displayAllPassed
-                    ? "bg-success/10 text-success"
-                    : "bg-error/10 text-error"
+                className={`font-mono text-[10px] tabular-nums ${
+                  displayAllPassed ? "text-success" : "text-error"
                 }`}
               >
-                {passedCount}/{totalCount} pasaron
+                {passedCount}/{totalCount} passed
               </span>
             )}
           </div>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-0.5">
             {status !== "running" && (
               <button
                 onClick={() => run()}
-                className="flex items-center gap-1 rounded px-1.5 py-0.5 text-[10px] text-text-dim hover:text-text hover:bg-surface-hover transition-colors"
+                className="flex items-center gap-1 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-text-dim hover:text-text hover:bg-surface-hover transition-colors"
                 aria-label="Re-run tests"
               >
-                <Play size={10} />
-                <span>Ejecutar</span>
+                <Play size={9} strokeWidth={1.75} />
+                <span>run</span>
               </button>
             )}
             <button
               onClick={() => setTestOutputOpen(false)}
-              className="rounded p-1 text-text-dim hover:text-text hover:bg-surface-hover transition-colors"
+              className="p-1 text-text-dim hover:text-text hover:bg-surface-hover transition-colors"
               aria-label="Close test output"
             >
-              <X size={14} />
+              <X size={12} strokeWidth={1.5} />
             </button>
           </div>
         </div>
 
-        {/* Results */}
-        <div ref={scrollRef} className="overflow-y-auto p-4 flex-1">
+        {/* Results — terminal-grade, monospace */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto px-3 py-2 font-mono">
           {displayLines.length === 0 && status === "idle" && (
-            <p className="text-xs text-text-dim">
-              Ejecuta las pruebas para verificar tu implementación.
+            <p className="text-[11px] text-text-dim">
+              $ run tests to verify your implementation
             </p>
           )}
           {displayLines.length === 0 && status === "running" && (
-            <p className="text-xs text-text-dim">Ejecutando pruebas...</p>
+            <p className="text-[11px] text-text-dim">$ running tests...</p>
           )}
 
-          <div className="flex flex-col gap-2" role="list" aria-label="Test results">
+          <div className="flex flex-col" role="list" aria-label="Test results">
             {displayLines.map((line, i) => (
               <div
                 key={i}
-                className="animate-fadeIn"
-                style={{ animationDelay: `${i * 60}ms` }}
+                className="animate-fadeIn py-0.5"
+                style={{ animationDelay: `${i * 40}ms` }}
                 role="listitem"
                 aria-label={`${line.passed === true ? "Passed" : line.passed === false ? "Failed" : "Info"}: ${line.message}`}
               >
                 <div className="flex items-start gap-2">
                   {line.passed === true ? (
-                    <CheckCircle2 size={14} className="mt-0.5 flex-shrink-0 text-success" />
+                    <CheckCircle2 size={12} strokeWidth={1.75} className="mt-0.5 flex-shrink-0 text-success" />
                   ) : line.passed === false ? (
-                    <XCircle size={14} className="mt-0.5 flex-shrink-0 text-error" />
+                    <XCircle size={12} strokeWidth={1.75} className="mt-0.5 flex-shrink-0 text-error" />
                   ) : (
-                    <Circle size={14} className="mt-0.5 flex-shrink-0 text-text-dim" />
+                    <Circle size={12} strokeWidth={1.5} className="mt-0.5 flex-shrink-0 text-text-dim" />
                   )}
                   <span
-                    className={`text-xs ${
+                    className={`text-[11px] leading-relaxed ${
                       line.passed === false
                         ? "text-error"
                         : line.passed === null
@@ -217,20 +214,20 @@ export function TestOutput() {
                 </div>
 
                 {line.passed === false && line.expected != null && line.actual != null && (
-                  <div className="ml-6 mt-1.5 rounded bg-error/[0.06] px-3 py-2 text-[11px] font-mono">
-                    <div className="flex items-start gap-1">
-                      <span className="text-text-dim flex-shrink-0">expected:</span>
-                      <span className="text-success break-all">{line.expected}</span>
+                  <div className="ml-[22px] mt-1 border-l border-error/30 bg-error/[0.04] px-3 py-1.5 text-[11px]">
+                    <div className="flex items-start gap-2">
+                      <span className="flex-shrink-0 text-text-dim">expected</span>
+                      <span className="break-all text-success">{line.expected}</span>
                     </div>
-                    <div className="flex items-start gap-1 mt-0.5">
-                      <span className="text-text-dim flex-shrink-0">{"     got:"}</span>
-                      <span className="text-error break-all">{line.actual}</span>
+                    <div className="mt-0.5 flex items-start gap-2">
+                      <span className="flex-shrink-0 text-text-dim">{"  actual"}</span>
+                      <span className="break-all text-error">{line.actual}</span>
                     </div>
                   </div>
                 )}
 
                 {line.passed === false && line.hint && (
-                  <div className="ml-6 mt-1.5 rounded bg-warning/[0.06] px-3 py-2 text-[11px] text-warning/80">
+                  <div className="ml-[22px] mt-1 border-l border-warning/30 bg-warning/[0.04] px-3 py-1.5 text-[11px] text-warning/80">
                     {line.hint}
                   </div>
                 )}
@@ -263,8 +260,8 @@ function SuccessCTA() {
 
   if (!next) {
     return (
-      <div className="mt-3 rounded-full bg-success/5 px-4 py-2 border border-success/10 inline-flex">
-        <p className="text-xs font-medium text-success">Proyecto completado</p>
+      <div className="mt-3 inline-flex border border-success/30 bg-success/5 px-3 py-1.5">
+        <p className="font-mono text-[11px] text-success">project complete</p>
       </div>
     );
   }
@@ -276,7 +273,7 @@ function SuccessCTA() {
           dismissSuccess();
           setActiveSubmodule(next.module, next.sub);
         }}
-        className="rounded-full bg-primary px-4 py-1.5 text-xs font-medium text-white hover:bg-primary-hover transition-colors"
+        className="bg-primary px-3.5 py-1.5 text-xs font-medium text-white hover:bg-primary-hover transition-colors"
       >
         Siguiente tarea →
       </button>

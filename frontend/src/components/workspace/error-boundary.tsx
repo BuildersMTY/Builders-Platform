@@ -31,12 +31,12 @@ export class WorkspaceErrorBoundary extends Component<Props, State> {
     return (
       <div className="flex h-screen items-center justify-center bg-bg">
         <div className="max-w-md text-center px-6">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-error/10">
-            <span className="text-xl text-error">!</span>
+          <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center border border-error/40 bg-error/5">
+            <span className="font-mono text-lg text-error">!</span>
           </div>
 
           <h2 className="text-xl font-semibold tracking-tight text-text">
-            Algo <span className="font-serif italic text-primary">salió mal</span>
+            Algo salió mal
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-text-muted">
             Tu código está seguro. Esto es un error de la plataforma.
@@ -45,7 +45,7 @@ export class WorkspaceErrorBoundary extends Component<Props, State> {
           <div className="mt-8 flex items-center justify-center gap-4">
             <button
               onClick={() => window.location.reload()}
-              className="rounded-full bg-primary px-7 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
+              className="bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
             >
               Recargar
             </button>
@@ -71,7 +71,7 @@ export class WorkspaceErrorBoundary extends Component<Props, State> {
           )}
 
           {this.state.showDetails && this.state.error && (
-            <pre className="mt-3 max-h-32 overflow-auto rounded-lg bg-surface p-3 text-left text-[10px] text-text-dim font-mono">
+            <pre className="mt-3 max-h-32 overflow-auto border border-border bg-surface p-3 text-left text-[10px] text-text-dim font-mono">
               {this.state.error.message}
               {"\n"}
               {this.state.error.stack}

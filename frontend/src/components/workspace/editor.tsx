@@ -69,9 +69,10 @@ const buildmancerTheme = EditorView.theme(
     ".cm-panels input, .cm-panels button": {
       backgroundColor: "#1e1c1c",
       color: "#e0e0e0",
-      border: "1px solid #333",
-      borderRadius: "4px",
+      border: "1px solid #2a2727",
+      borderRadius: "2px",
       fontSize: "12px",
+      fontFamily: "var(--font-mono)",
     },
     ".cm-panels button:hover": {
       backgroundColor: "#2a2a2a",

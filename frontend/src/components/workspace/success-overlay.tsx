@@ -149,14 +149,14 @@ export function SuccessOverlay() {
           {isLastInCourse ? (
             <a
               href="/courses"
-              className="rounded-full bg-primary px-7 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
+              className="bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
             >
               Ver otros proyectos
             </a>
           ) : (
             <button
               onClick={handleContinue}
-              className="rounded-full bg-primary px-7 py-2.5 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
+              className="bg-primary px-6 py-2 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
               autoFocus
             >
               Siguiente tarea →
@@ -165,9 +165,9 @@ export function SuccessOverlay() {
 
           <button
             onClick={handleSkip}
-            className="text-xs text-text-dim hover:text-text-muted transition-colors"
+            className="font-mono text-[11px] text-text-dim hover:text-text-muted transition-colors"
           >
-            Omitir celebraciones
+            omitir celebraciones
           </button>
         </div>
       </div>

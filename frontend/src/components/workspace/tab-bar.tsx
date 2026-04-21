@@ -30,7 +30,7 @@ export function TabBar({ saving, saved }: TabBarProps) {
 
   return (
     <div
-      className="flex h-10 items-center gap-px overflow-x-auto bg-surface border-b border-border"
+      className="flex h-8 items-center overflow-x-auto bg-surface border-b border-border"
       role="tablist"
       aria-label="Open files"
     >
@@ -48,9 +48,9 @@ export function TabBar({ saving, saved }: TabBarProps) {
         return (
           <div
             key={tabId}
-            className={`group relative flex items-center gap-2 px-3.5 py-2 text-xs cursor-pointer transition-colors select-none ${
+            className={`group relative flex h-8 items-center gap-2 border-r border-border px-3 font-mono text-[11px] cursor-pointer select-none transition-colors ${
               isActive
-                ? "bg-bg text-text font-medium"
+                ? "bg-bg text-text"
                 : "text-text-dim hover:text-text-muted hover:bg-surface-hover"
             }`}
             onClick={() => setActiveFile(tabId)}
@@ -65,29 +65,29 @@ export function TabBar({ saving, saved }: TabBarProps) {
             tabIndex={isActive ? 0 : -1}
           >
             {isActive && (
-              <div className="absolute top-0 left-0 right-0 h-[3px] bg-primary rounded-b-sm" />
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-primary" />
             )}
             {isResource ? (
-              <BookOpen size={12} className="flex-shrink-0 text-warning/70" />
+              <BookOpen size={11} className="flex-shrink-0 text-text-dim" strokeWidth={1.5} />
             ) : (
-              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${getExtColor(label)}`} />
+              <span className={`h-1 w-1 flex-shrink-0 rounded-full ${getExtColor(label)}`} />
             )}
             <span className="truncate max-w-[140px]">{label}</span>
             {/* Save status (code tabs only) */}
             {isActive && !isResource && saving && (
-              <span className="text-[10px] text-text-dim">...</span>
+              <span className="text-[10px] text-text-dim tabular-nums">saving</span>
             )}
             {isActive && !isResource && saved && !saving && (
-              <span className="text-[10px] text-success">✓</span>
+              <span className="h-1 w-1 flex-shrink-0 rounded-full bg-success" aria-label="Saved" />
             )}
             <button
               onClick={(e) => { e.stopPropagation(); closeFile(tabId); }}
-              className={`ml-1 rounded p-0.5 text-text-dim hover:text-text hover:bg-surface-hover transition-colors ${
+              className={`ml-0.5 p-0.5 text-text-dim hover:text-text transition-colors ${
                 isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
               }`}
               aria-label={`Close ${label}`}
             >
-              <X size={12} />
+              <X size={11} strokeWidth={1.5} />
             </button>
           </div>
         );

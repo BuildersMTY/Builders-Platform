@@ -1,99 +1,106 @@
-import { Check } from "lucide-react";
 import Link from "next/link";
 import { Faq } from "@/components/marketing/faq";
-
-interface PricingTier {
-  name: string;
-  price: string;
-  period: string;
-  description: string;
-  features: string[];
-  cta: string;
-  ctaHref: string;
-  highlighted?: boolean;
-}
-
-const tiers: PricingTier[] = [
-  {
-    name: "Free",
-    price: "$0",
-    period: "",
-    description: "Un proyecto completo para que veas cómo funciona.",
-    features: ["1 proyecto completo", "Editor en el navegador", "Pruebas automatizadas", "Sin instalar nada"],
-    cta: "Empezar gratis",
-    ctaHref: "/courses",
-  },
-  {
-    name: "Buildmancer",
-    price: "$199",
-    period: "MXN/mes",
-    description: "Todos los proyectos. Todos los lenguajes. Tu portafolio completo.",
-    features: ["Proyectos ilimitados", "Go, Python y más", "Exportación a GitHub", "Certificación LinkedIn", "Niveles junior a senior"],
-    cta: "Suscribirse",
-    ctaHref: "/courses",
-    highlighted: true,
-  },
-  {
-    name: "Estudiante",
-    price: "$149",
-    period: "MXN/mes",
-    description: "Todo en Buildmancer. Verifica tu correo .edu y listo.",
-    features: ["Todo en Buildmancer", "Verificación con correo .edu", "Descuento permanente"],
-    cta: "Verificar estudiante",
-    ctaHref: "/courses",
-  },
-];
+import { PricingTiers } from "@/components/marketing/pricing-tiers";
+import { PricingNotIncluded } from "@/components/marketing/pricing-not-included";
 
 export default function PricingPage() {
   return (
-    <div className="pt-24">
-      <div className="px-6 text-center">
-        <h1 className="text-4xl font-bold md:text-5xl tracking-tight">
-          Un plan. <span className="font-serif italic text-primary">Todo</span> incluido.
-        </h1>
-        <p className="mt-5 text-lg text-text-muted">Sin límites artificiales. Construye todo lo que quieras.</p>
+    <div>
+      {/* Editorial masthead */}
+      <header className="px-6 pt-36 pb-20 md:pt-44 md:pb-28">
+        <div className="mx-auto max-w-6xl">
+          {/* Tiny meta strip — like a magazine index line */}
+          <div className="flex items-center gap-4 text-text-dim">
+            <span
+              aria-hidden
+              className="h-px w-10 bg-border"
+            />
+            <span className="font-mono text-[11px] uppercase tracking-[0.22em]">
+              N&deg; 01 &middot; Precios
+            </span>
+            <span
+              aria-hidden
+              className="block h-1 w-1 rounded-full bg-primary"
+              title="Plan activo"
+            />
+          </div>
+
+          {/* Asymmetric headline — serif, large, breaks across columns */}
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8">
+            <h1 className="md:col-span-9 font-serif text-[52px] leading-[0.96] tracking-[-0.02em] text-text md:text-[112px]">
+              Un precio.
+              <br />
+              Un portafolio
+              <br />
+              <span className="italic">real.</span>
+            </h1>
+
+            <aside className="md:col-span-3 md:pt-6 md:border-l md:border-border md:pl-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
+                Editorial
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-text-muted">
+                Los precios son provisionales. Se ajustaran una sola vez antes
+                del lanzamiento publico y quedaran fijos durante 12 meses para
+                quien se suscriba hoy.
+              </p>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
+                Abril 2026 &mdash; v0.1
+              </p>
+            </aside>
+          </div>
+
+          {/* Ultra-confident subhead, no hedging */}
+          <p className="mt-14 max-w-2xl text-lg leading-relaxed text-text-muted md:text-xl">
+            No cobramos por hora de video. No cobramos por modulo. Pagas una
+            sola cosa: acceso irrestricto a construir en un entorno profesional
+            hasta que el codigo sea tuyo.
+          </p>
+
+          {/* Quick anchor to the tiers, no gradient CTA here — stay editorial */}
+          <div className="mt-12 flex items-center gap-6">
+            <Link
+              href="#planes"
+              className="inline-flex items-center gap-3 text-sm font-medium text-text transition-colors hover:text-text-muted"
+            >
+              <span
+                aria-hidden
+                className="h-px w-8 bg-text transition-[width] duration-300 group-hover:w-12"
+              />
+              Ver los tres caminos
+            </Link>
+            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
+              3 planes &middot; 0 contratos
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <div id="planes" className="scroll-mt-24">
+        <PricingTiers />
       </div>
 
-      <div className="mx-auto mt-20 grid max-w-5xl gap-6 px-6 md:grid-cols-3">
-        {tiers.map((tier) => (
-          <div
-            key={tier.name}
-            className={`flex flex-col rounded-xl border p-10 transition-colors duration-200 ${
-              tier.highlighted
-                ? "border-primary/40 bg-primary-subtle ring-1 ring-primary/10"
-                : "border-border bg-surface"
-            }`}
-          >
-            {tier.highlighted && (
-              <span className="mb-5 inline-flex w-fit rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white tracking-wide uppercase">Popular</span>
-            )}
-            <h3 className="text-xl font-semibold">{tier.name}</h3>
-            <div className="mt-5 flex items-baseline gap-1.5">
-              <span className="text-5xl font-bold tracking-tight">{tier.price}</span>
-              {tier.period && <span className="text-sm text-text-muted">{tier.period}</span>}
-            </div>
-            <p className="mt-3 text-sm text-text-muted leading-relaxed">{tier.description}</p>
-            <ul className="mt-8 flex-1 space-y-4">
-              {tier.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-sm">
-                  <Check size={16} className="mt-0.5 flex-shrink-0 text-success" />
-                  {feature}
-                </li>
-              ))}
-            </ul>
-            <Link
-              href={tier.ctaHref}
-              className={`mt-10 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 ${
-                tier.highlighted
-                  ? "bg-primary text-white hover:bg-primary-hover"
-                  : "border border-white/20 text-white hover:bg-surface-hover"
-              }`}
-            >
-              {tier.cta}
-            </Link>
+      <PricingNotIncluded />
+
+      {/* Founder's note — replaces the "contact sales for enterprise" cliche */}
+      <section className="px-6 py-28">
+        <div className="mx-auto grid max-w-4xl grid-cols-1 gap-10 md:grid-cols-12">
+          <p className="md:col-span-3 font-mono text-[11px] uppercase tracking-[0.2em] text-text-dim">
+            Nota del fundador
+          </p>
+          <div className="md:col-span-9">
+            <p className="font-serif text-2xl leading-[1.35] text-text md:text-[28px]">
+              &ldquo;Prefiero cobrar poco y construir algo que no de
+              verguenza, que cobrar mucho y venderte otro curso mas. Si un
+              dia el precio ya no refleja el producto, se avisa con un mes
+              de anticipacion. Ese es el trato.&rdquo;
+            </p>
+            <p className="mt-6 font-mono text-xs uppercase tracking-[0.18em] text-text-dim">
+              Raul &mdash; Fundador, BuildersPlatform
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
+      </section>
 
       <Faq />
     </div>
