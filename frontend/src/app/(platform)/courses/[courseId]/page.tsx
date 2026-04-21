@@ -96,40 +96,52 @@ export default async function CourseDetailPage({ params }: Props) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-6 pt-14 pb-24">
-        {/* Masthead */}
-        <div className="flex items-center justify-between border-b border-border pb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-          <span>
-            Proyecto No. {courseNo} &nbsp;/&nbsp; {firstVariant.language}
-          </span>
-          <span>{firstVariant.difficulty}</span>
+      <main className="mx-auto max-w-6xl px-6 pt-20 pb-32">
+        {/* Masthead — Sharp, Heavy Borders */}
+        <div className="flex items-center justify-between border-b-2 border-text/80 pb-6 mb-16">
+          <div className="flex items-center gap-4 font-mono text-[10px] font-black uppercase tracking-[0.3em] text-primary">
+            <span className="flex h-6 w-14 items-center justify-center bg-primary/20 text-text font-black border-2 border-primary/40">
+              #{courseNo}
+            </span>
+            <span className="text-text-dim uppercase tracking-widest">Dossier de Proyecto {new Date().getFullYear()}</span>
+          </div>
+          <div className="flex items-center gap-3 font-mono text-[10px] font-black uppercase tracking-[0.2em] text-text-dim">
+            <div className="h-3 w-3 bg-green-500/60 shadow-[0_0_8px_rgba(34,197,94,0.4)]" />
+            {firstVariant.difficulty}
+          </div>
         </div>
 
-        {/* Hero — editorial display type, no image placeholder */}
-        <section className="grid grid-cols-1 gap-10 pt-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
+        {/* Hero — Sharp Scale, Brutalist Impact */}
+        <section className="grid grid-cols-1 gap-16 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-24">
           <div className="min-w-0">
-            <h1 className="font-serif text-5xl leading-[1.04] tracking-tight text-text sm:text-6xl md:text-[76px]">
-              {firstVariant.title}
+            <h1 className="font-serif text-5xl leading-[1] tracking-tighter text-text sm:text-6xl md:text-[72px] lg:text-[84px] font-black uppercase italic">
+              {firstVariant.title.split(' ').map((word, i) => (
+                <span key={i} className={i % 3 === 1 ? "text-primary not-italic" : ""}>
+                   {word}{' '}
+                </span>
+              ))}
             </h1>
-            <p className="mt-8 max-w-xl text-lg leading-[1.65] text-text-muted">
+            
+            <div className="mt-12 h-[3px] w-24 bg-primary" />
+            
+            <p className="mt-10 max-w-xl text-xl leading-[1.6] text-text-muted/90 font-bold border-l-4 border-primary/40 pl-8">
               {firstVariant.description}
             </p>
 
-            <div className="mt-12 max-w-xl">
-              <div className="mb-4 flex items-baseline justify-between gap-6">
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-                  Enrolar
+            <div className="mt-20 max-w-xl border-2 border-text bg-surface p-12 rounded-none shadow-[12px_12px_0px_rgba(var(--color-primary-rgb),0.05)]">
+              <div className="mb-8 flex items-center justify-between gap-6">
+                <span className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-text">
+                  Protocolo de Enrolamiento
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-                  {languages.length}{" "}
-                  {languages.length === 1 ? "lenguaje" : "lenguajes"}
-                </span>
+                <div className="h-[2px] flex-1 bg-border" />
               </div>
               <LanguagePicker courseId={courseId} languages={languages} />
-              <p className="mt-4 max-w-md text-xs leading-relaxed text-text-dim">
-                Mismo proyecto, diferente lenguaje. Tu editor, pruebas
-                automatizadas y entorno listo desde el primer commit.
-              </p>
+              <div className="mt-12 flex items-start gap-5 bg-bg p-8 border-2 border-border rounded-none shadow-inner">
+                <span className="material-symbols-outlined text-primary text-[24px] font-black">info</span>
+                <p className="text-[14.5px] leading-[1.6] text-text-muted font-bold italic">
+                   Entorno de ingeniería real. Al enrolarte, se provisionará un repositorio privado y un entorno de ejecución dedicado para el proyecto.
+                </p>
+              </div>
             </div>
           </div>
 

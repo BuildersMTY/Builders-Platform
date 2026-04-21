@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useSpring, useTransform, animate } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, animate } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function SlotMachineNumber({ value }: { value: number }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -44,6 +44,7 @@ export function PricingTiers() {
 
   return (
     <section className="px-6 pb-24 relative overflow-hidden">
+      {/* Toggle */}
       <div className="flex justify-center mb-20">
         <div className="inline-flex items-center p-1 border border-border bg-surface rounded-sm">
           <button
@@ -192,4 +193,3 @@ export function PricingTiers() {
     </section>
   );
 }
-

@@ -45,25 +45,32 @@ export function DetailDossier({
   ];
 
   return (
-    <aside className="border-t border-border pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
-      <div className="mb-5 flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-          Dossier
-        </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-          /{meta.slug}
-        </span>
+    <aside className="border-2 border-text bg-surface p-8 rounded-none lg:sticky lg:top-8 shadow-[8px_8px_0px_rgba(var(--color-primary-rgb),0.1)]">
+      <div className="mb-8 flex items-center justify-between border-b-2 border-border pb-6">
+        <div className="flex flex-col gap-1">
+          <span className="font-mono text-[11px] font-black uppercase tracking-[0.3em] text-primary">
+            Dossier Técnico
+          </span>
+          <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-text-dim">
+            Ficha: {meta.slug}
+          </span>
+        </div>
+        <div className="h-10 w-10 rounded-none border-2 border-text bg-bg flex items-center justify-center font-serif italic text-xl text-primary font-black">
+          {meta.language.slice(0, 1).toUpperCase()}
+        </div>
       </div>
-      <dl className="flex flex-col divide-y divide-border/60 border-t border-border/60">
+      
+      <dl className="flex flex-col gap-6">
         {rows.map(([label, value]) => (
           <div
             key={label}
-            className="flex items-baseline justify-between gap-6 py-3"
+            className="flex flex-col gap-2 group"
           >
-            <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-dim">
+            <dt className="font-mono text-[10px] font-black uppercase tracking-[0.2em] text-text-dim flex items-center gap-2">
+              <span className="h-2 w-2 bg-primary/60" />
               {label}
             </dt>
-            <dd className="text-right font-mono text-[13px] text-text tabular-nums">
+            <dd className="font-mono text-[14px] font-black text-text tabular-nums pl-4 border-l-2 border-border group-hover:border-primary transition-colors">
               {value}
             </dd>
           </div>
@@ -71,27 +78,28 @@ export function DetailDossier({
       </dl>
 
       {(meta.build_cmd || meta.unit_cmd || meta.run_cmd) && (
-        <div className="mt-7">
-          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-dim">
-            Comandos
+        <div className="mt-10 pt-8 border-t-2 border-border">
+          <span className="font-mono text-[11px] font-black uppercase tracking-[0.2em] text-text flex items-center gap-2 mb-4">
+             <span className="material-symbols-outlined text-[18px]">terminal</span>
+             Protocolo
           </span>
-          <div className="mt-3 space-y-1.5 border border-border bg-surface px-4 py-3 font-mono text-[12px] leading-relaxed text-text-muted">
+          <div className="space-y-4 bg-bg p-6 font-mono text-[12px] leading-relaxed border-2 border-border rounded-none shadow-inner">
             {meta.build_cmd && (
-              <div>
-                <span className="text-text-dim">$ </span>
-                {meta.build_cmd}
+              <div className="flex flex-col gap-1">
+                <span className="text-primary font-black uppercase tracking-widest text-[9px]">// build</span>
+                <code className="text-text font-bold break-all">{meta.build_cmd}</code>
               </div>
             )}
             {meta.unit_cmd && (
-              <div>
-                <span className="text-text-dim">$ </span>
-                {meta.unit_cmd}
+              <div className="flex flex-col gap-1">
+                <span className="text-primary font-black uppercase tracking-widest text-[9px]">// test</span>
+                <code className="text-text font-bold break-all">{meta.unit_cmd}</code>
               </div>
             )}
             {meta.run_cmd && (
-              <div>
-                <span className="text-text-dim">$ </span>
-                {meta.run_cmd}
+              <div className="flex flex-col gap-1">
+                <span className="text-primary font-black uppercase tracking-widest text-[9px]">// run</span>
+                <code className="text-text font-bold break-all">{meta.run_cmd}</code>
               </div>
             )}
           </div>

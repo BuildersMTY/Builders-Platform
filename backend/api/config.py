@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     courses_path: str = "./_courses"
     default_user_id: str = "local"
 
-    model_config = {"env_file": ".env"}
+    model_config = {"env_file": "../.env"}
 
 
 settings = Settings()
