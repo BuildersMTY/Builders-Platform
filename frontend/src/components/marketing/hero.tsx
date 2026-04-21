@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TerminalAnimation } from "./terminal-animation";
+import { EnvironmentFrame } from "./environment-frame";
 
 export function Hero() {
   return (
@@ -45,7 +45,7 @@ export function Hero() {
         </h1>
 
         {/* Copy + CTA — narrow column, offset right */}
-        <div className="col-span-12 lg:col-span-5 lg:col-start-1">
+        <div className="col-span-12 lg:col-span-4 lg:col-start-1">
           <p
             className="hero-animate max-w-md text-[15px] text-text-muted"
             style={{ animationDelay: "0.35s", lineHeight: 1.7 }}
@@ -82,19 +82,19 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Terminal — right-column, captioned like a figure */}
+        {/* Environment — right-column, captioned like a figure */}
         <figure
-          className="hero-animate col-span-12 lg:col-span-7 lg:col-start-6 lg:row-start-3 lg:-mt-8"
+          className="hero-animate col-span-12 lg:col-span-8 lg:col-start-5 lg:row-start-3 lg:-mt-4 lg:-mr-[6%]"
           style={{ animationDelay: "0.45s" }}
         >
-          <TerminalAnimation />
-          <figcaption className="mt-3 flex items-baseline justify-between font-mono text-[11px] text-text-dim">
+          <EnvironmentFrame />
+          <figcaption className="mt-5 flex items-baseline justify-between font-mono text-[11px] text-text-dim">
             <span>
               <span className="text-text-muted">Fig. 01</span>{" "}
-              <span className="text-border">/</span> Suite de pruebas
-              ejecutándose en el runner.
+              <span className="text-border">/</span> El entorno de trabajo —
+              editor, módulos y pruebas en una sola superficie.
             </span>
-            <span className="hidden sm:inline">go · http-server · 01</span>
+            <span className="hidden sm:inline">go · http-server · 05</span>
           </figcaption>
         </figure>
       </div>
