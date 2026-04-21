@@ -1,16 +1,23 @@
-import Link from "next/link";
+"use client";
 
-/**
- * Pricing tiers — editorial composition.
- *
- * Deliberate anti-pattern against 3-equal-cards:
- *  - Left column: Free tier rendered as a quiet "footnote" (small, text-only)
- *  - Center column: recommended tier — oversized serif price, taller panel, the lone red element
- *  - Right column: student tier as a stamped marginalia note with a handwritten-style tag
- *
- * Features are NOT bullet-lists with checkmarks. They're numbered spec entries
- * (01 / 02 / 03) reading like a datasheet — "serif dash" dividers, no icons.
- */
+import Link from "next/link";
+import { motion, useSpring, useTransform, animate } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
+function SlotMachineNumber({ value }: { value: number }) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    const controls = animate(0, value, {
+      duration: 1.5,
+      ease: "easeOut",
+      onUpdate: (latest) => setDisplayValue(Math.floor(latest)),
+    });
+    return () => controls.stop();
+  }, [value]);
+
+  return <span>{displayValue}</span>;
+}
 
 const freeFeatures = [
   "Un proyecto completo",
@@ -33,156 +40,156 @@ const studentFeatures = [
 ];
 
 export function PricingTiers() {
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+
   return (
-    <section className="px-6 pb-24">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 md:grid-cols-12 md:gap-8">
-        {/* FREE — small footnote on the left */}
-        <aside className="md:col-span-3 md:pt-24">
-          <div className="border-t border-border pt-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
-              Plan 00 — Prueba
-            </p>
-            <h3 className="mt-4 font-serif text-3xl italic leading-none text-text">
+    <section className="px-6 pb-24 relative overflow-hidden">
+      <div className="flex justify-center mb-20">
+        <div className="inline-flex items-center p-1 border border-border bg-surface rounded-sm">
+          <button
+            onClick={() => setBillingCycle("monthly")}
+            className={`px-6 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] transition-all ${
+              billingCycle === "monthly" 
+                ? "bg-text text-bg shadow-sm" 
+                : "text-text-dim hover:text-text"
+            }`}
+          >
+            Mensual
+          </button>
+          <button
+            onClick={() => setBillingCycle("yearly")}
+            className={`px-6 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] transition-all relative ${
+              billingCycle === "yearly" 
+                ? "bg-text text-bg shadow-sm" 
+                : "text-text-dim hover:text-text"
+            }`}
+          >
+            Anual
+            {billingCycle === "monthly" && (
+              <span className="absolute -top-2 -right-2 px-1.5 py-0.5 bg-primary text-[8px] font-bold text-bg rounded-sm animate-pulse">
+                -17%
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3 items-end">
+        {/* FREE */}
+        <motion.aside 
+          whileHover={{ y: -5 }}
+          className="flex flex-col border border-border bg-surface p-8 transition-shadow duration-300 hover:shadow-2xl rounded-sm"
+        >
+          <div className="mb-6">
+            <h3 className="font-serif text-3xl italic leading-none text-text">
               Gratis
             </h3>
-            <p className="mt-3 font-mono text-xs text-text-dim">
-              sin limite de tiempo
+            <p className="mt-2 text-[12px] font-medium text-text-dim">
+              Acceso a un proyecto completo
             </p>
-            <ul className="mt-8 space-y-3 text-sm leading-relaxed text-text-muted">
-              {freeFeatures.map((f) => (
-                <li key={f} className="flex items-baseline gap-3">
-                  <span
-                    aria-hidden
-                    className="font-serif text-text-dim select-none"
-                  >
-                    —
-                  </span>
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
+          </div>
+          <ul className="mb-10 flex-1 space-y-4 text-[13px] leading-relaxed text-text-muted">
+            {freeFeatures.map((f) => (
+              <li key={f} className="flex items-start gap-3">
+                <span className="mt-1.5 h-1 w-1 bg-border" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/courses"
+            className="flex h-11 w-full items-center justify-center border border-border bg-transparent text-[11px] font-bold uppercase tracking-[0.1em] text-text-dim transition-colors hover:border-text hover:text-text rounded-sm"
+          >
+            Empezar
+          </Link>
+        </motion.aside>
+ 
+        {/* BUILDMANCER — DISTILLED & SHARP */}
+        <article className="relative z-10 flex flex-col border border-primary bg-bg p-8 shadow-[0_0_50px_-10px_rgba(255,0,0,0.1)] md:scale-105 rounded-sm">
+          <div className="absolute -top-3 left-8 border border-primary bg-primary px-3 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-bg rounded-sm">
+            Más Popular
+          </div>
+          
+          <div className="mb-8 border-b border-border/50 pb-8">
+            <h3 className="font-serif text-5xl font-bold leading-none text-text tracking-tighter">
+              BuildMancer
+            </h3>
+            
+            <div className="mt-6 flex items-baseline gap-2">
+              <span className="font-serif text-6xl font-bold leading-none text-text italic">
+                $<SlotMachineNumber value={billingCycle === "monthly" ? 199 : 1990} />
+              </span>
+              <span className="text-[12px] font-medium text-text-dim uppercase tracking-tight">
+                mxn / {billingCycle === "monthly" ? "mes" : "año"}
+              </span>
+            </div>
+            {billingCycle === "yearly" && (
+              <p className="mt-2 text-[11px] font-medium text-primary uppercase">
+                Ahorras $398 MXN al año
+              </p>
+            )}
+          </div>
+ 
+          <ul className="mb-10 flex-1 space-y-5 text-[13px] text-text">
+            {proFeatures.map((f, i) => (
+              <li key={f.k} className="flex items-baseline gap-4">
+                <span className="font-mono text-[9px] text-primary/50 font-bold">{String(i + 1).padStart(2, "0")}</span>
+                <span>
+                  <strong className="font-bold text-[11px] uppercase tracking-wider text-text">{f.k}:</strong>{" "}
+                  <span className="text-text-muted">{f.v}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+ 
+          <div className="space-y-4">
             <Link
               href="/courses"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-text underline decoration-border decoration-1 underline-offset-[6px] transition-colors hover:decoration-text"
+              className="group relative flex h-14 w-full items-center justify-center rounded-sm border border-primary bg-primary/10 text-[14px] font-bold text-primary transition-all duration-300 hover:bg-primary hover:text-bg"
             >
-              Empezar sin pagar
-              <span aria-hidden className="text-text-dim">&rarr;</span>
+              <span>Suscribirme ahora</span>
             </Link>
-          </div>
-        </aside>
-
-        {/* BUILDMANCER — the centerpiece */}
-        <article className="md:col-span-6 md:col-start-4">
-          <div className="relative border border-border bg-surface-alt/60 px-8 py-12 md:px-14 md:py-16">
-            {/* Editorial marker — replaces the banned "Most popular" ribbon */}
-            <div className="absolute left-0 top-0 flex items-center gap-2 bg-bg px-3 py-1.5 -translate-y-1/2 ml-8">
-              <span className="block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-muted">
-                Recomendado
-              </span>
-            </div>
-
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
-              Plan 01 — Acceso completo
+            <p className="text-center text-[10px] font-medium text-text-dim">
+              Acceso instantáneo · Cancela en un clic
             </p>
-            <h3 className="mt-5 font-serif text-6xl leading-[0.9] tracking-tight text-text md:text-7xl">
-              Buildmancer
-            </h3>
-
-            {/* Price — editorial, serif, oversized */}
-            <div className="mt-10 flex items-end gap-4">
-              <span className="font-serif text-[96px] leading-none tracking-tight text-text md:text-[128px]">
-                199
-              </span>
-              <div className="flex flex-col pb-3 leading-tight">
-                <span className="font-mono text-sm uppercase tracking-widest text-text-muted">
-                  MXN
-                </span>
-                <span className="mt-1 font-mono text-xs text-text-dim">
-                  / mes
-                </span>
-              </div>
-            </div>
-
-            <p className="mt-6 max-w-md text-base leading-relaxed text-text-muted">
-              Acceso irrestricto a cada proyecto, en cada lenguaje, de junior
-              hasta senior. Construye tu portafolio real mientras aprendes.
-            </p>
-
-            {/* Spec-sheet style features */}
-            <dl className="mt-12 divide-y divide-border border-y border-border">
-              {proFeatures.map((f, i) => (
-                <div
-                  key={f.k}
-                  className="grid grid-cols-12 items-baseline gap-4 py-4"
-                >
-                  <dt className="col-span-1 font-mono text-[11px] text-text-dim">
-                    {String(i + 1).padStart(2, "0")}
-                  </dt>
-                  <dd className="col-span-4 font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted">
-                    {f.k}
-                  </dd>
-                  <dd className="col-span-7 text-sm text-text">{f.v}</dd>
-                </div>
-              ))}
-            </dl>
-
-            <div className="mt-12 flex flex-wrap items-center gap-6">
-              <Link
-                href="/courses"
-                className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-primary-hover"
-              >
-                Suscribirme
-              </Link>
-              <p className="font-mono text-xs text-text-dim">
-                Cancela cuando quieras. Sin contrato.
-              </p>
-            </div>
           </div>
         </article>
-
-        {/* STUDENT — marginalia */}
-        <aside className="md:col-span-3 md:col-start-10 md:pt-24">
-          <div className="relative border-t border-border pt-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
-              Plan 02 — .edu
-            </p>
-            <h3 className="mt-4 font-serif text-3xl italic leading-none text-text">
+ 
+        {/* STUDENT */}
+        <motion.aside 
+          whileHover={{ y: -5 }}
+          className="flex flex-col border border-border bg-surface p-8 transition-shadow duration-300 hover:shadow-2xl rounded-sm"
+        >
+          <div className="mb-6">
+            <h3 className="font-serif text-3xl italic leading-none text-text">
               Estudiante
             </h3>
             <div className="mt-4 flex items-baseline gap-2">
-              <span className="font-serif text-4xl text-text">149</span>
-              <span className="font-mono text-[11px] uppercase tracking-widest text-text-muted">
-                mxn / mes
+              <span className="font-serif text-4xl leading-none text-text">
+                $<SlotMachineNumber value={billingCycle === "monthly" ? 149 : 1490} />
+              </span>
+              <span className="text-[12px] font-medium text-text-dim uppercase">
+                mxn / {billingCycle === "monthly" ? "mes" : "año"}
               </span>
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-text-muted">
-              Verifica tu correo institucional. Conservas el descuento mientras
-              tu cuenta siga activa.
-            </p>
-            <ul className="mt-6 space-y-3 text-sm leading-relaxed text-text-muted">
-              {studentFeatures.map((f) => (
-                <li key={f} className="flex items-baseline gap-3">
-                  <span
-                    aria-hidden
-                    className="font-serif text-text-dim select-none"
-                  >
-                    —
-                  </span>
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <Link
-              href="/courses"
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-text underline decoration-border decoration-1 underline-offset-[6px] transition-colors hover:decoration-text"
-            >
-              Verificar .edu
-              <span aria-hidden className="text-text-dim">&rarr;</span>
-            </Link>
           </div>
-        </aside>
+          <ul className="mb-10 flex-1 space-y-4 text-[13px] leading-relaxed text-text-muted">
+            {studentFeatures.map((f) => (
+              <li key={f} className="flex items-start gap-3">
+                <span className="mt-1.5 h-1 w-1 bg-border" />
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/courses"
+            className="flex h-11 w-full items-center justify-center border border-border bg-transparent text-[11px] font-bold uppercase tracking-[0.1em] text-text-dim transition-colors hover:border-text hover:text-text rounded-sm"
+          >
+            Verificar Estudiante
+          </Link>
+        </motion.aside>
       </div>
     </section>
   );
 }
+

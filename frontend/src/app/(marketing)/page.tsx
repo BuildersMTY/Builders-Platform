@@ -5,6 +5,7 @@ import { Manifesto } from "@/components/marketing/manifesto";
 import { CareerValue } from "@/components/marketing/career-value";
 import { PricingTeaser } from "@/components/marketing/pricing-teaser";
 import { ScrollReveal } from "@/components/marketing/scroll-reveal";
+import { OverdriveBackground } from "@/components/marketing/overdrive-background";
 import type { CourseSummary } from "@/lib/types";
 
 async function getCourses(): Promise<CourseSummary[]> {
@@ -24,6 +25,7 @@ export default async function LandingPage() {
 
   return (
     <>
+      <OverdriveBackground />
       {/* Hero owns the only orchestrated entrance motion. */}
       <Hero />
 

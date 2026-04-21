@@ -8,12 +8,12 @@ export function Footer() {
         <div className="flex items-center gap-2.5">
           <Image
             src="/builderslogo2.svg"
-            alt="Buildmancer"
+            alt="BuildMancer"
             width={20}
             height={20}
           />
           <span className="text-xs text-text-dim">
-            Buildmancer © {new Date().getFullYear()}
+            BuildMancer © {new Date().getFullYear()}
           </span>
         </div>
         <div className="flex gap-6">

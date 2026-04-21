@@ -38,21 +38,21 @@ export function PricingTeaser() {
             el catálogo completo por el costo de dos cafés al mes.
           </p>
 
-          <div className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <div className="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6">
             <Link
               href="/courses"
-              className="inline-flex items-center rounded-full bg-primary px-7 py-3 text-[13px] font-medium tracking-wide text-white transition-colors duration-200 hover:bg-primary-hover"
+              className="inline-flex h-11 items-center justify-center rounded-sm border border-primary bg-primary/10 px-8 text-[13px] font-bold text-primary transition-all hover:bg-primary hover:text-bg"
             >
-              Abrir el editor
+              Comenzar entrenamiento
             </Link>
             <Link
               href="/pricing"
-              className="group inline-flex items-center gap-2 text-[13px] text-text-muted transition-colors duration-200 hover:text-text"
+              className="group inline-flex items-center gap-3 text-[13px] font-medium text-text-dim transition-colors duration-200 hover:text-text"
             >
               <span>Ver planes</span>
               <span
                 aria-hidden
-                className="h-px w-8 bg-border transition-all duration-200 group-hover:w-12 group-hover:bg-text"
+                className="h-px w-8 bg-border transition-all duration-200 group-hover:w-16 group-hover:bg-primary"
               />
             </Link>
           </div>

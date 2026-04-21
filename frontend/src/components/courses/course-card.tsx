@@ -22,86 +22,71 @@ export function CourseCard({ course, index, progress }: CourseCardProps) {
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="group relative block border-b border-border transition-colors duration-200 hover:bg-surface-alt/60 focus-visible:bg-surface-alt/60"
+      className="group flex w-full flex-col overflow-hidden rounded-2xl border border-border/60 bg-surface p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-[0_8px_30px_rgba(var(--color-primary-rgb),0.04)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-bg"
     >
-      <div className="grid grid-cols-[3.5rem_1fr_auto] items-baseline gap-6 px-4 py-6 md:gap-10 md:px-6 md:py-7">
-        {/* Leading numeral — editorial index */}
+      <div className="flex items-start justify-between mb-4">
+        {/* Beautiful cursive numeral kept for elegance, bounded in a SaaS container context */}
         <span
           aria-hidden
-          className="font-serif text-3xl italic leading-none tabular-nums text-text-dim transition-colors duration-200 group-hover:text-primary md:text-4xl"
+          className="font-serif text-3xl italic leading-none tabular-nums text-text-dim transition-colors duration-300 group-hover:text-primary"
         >
           {String(index + 1).padStart(2, "0")}
         </span>
-
-        {/* Body: title + slug + description */}
-        <div className="min-w-0">
-          <div className="flex items-baseline gap-3">
-            <h3 className="truncate text-lg font-medium tracking-tight text-text md:text-xl">
-              {course.title}
-            </h3>
-            <span className="hidden font-mono text-[11px] uppercase tracking-[0.14em] text-text-dim md:inline">
-              / {course.slug}
-            </span>
-          </div>
-          <p className="mt-2 line-clamp-2 max-w-2xl text-sm leading-relaxed text-text-muted">
-            {course.description}
-          </p>
-
-          {progress && progress.total > 0 && (
-            <div className="mt-3 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.14em] text-text-dim">
-              <span>
-                {progress.lang} · {progress.completed}/{progress.total}
-              </span>
-              <span className="h-px flex-1 max-w-[6rem] bg-border">
-                <span
-                  className="block h-full bg-primary"
-                  style={{
-                    width: `${Math.min(100, Math.round((progress.completed / progress.total) * 100))}%`,
-                  }}
-                />
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Metadata rail — mono, right-aligned, terse. Column labels
-            live in the list header above, so only values here. */}
-        <dl className="hidden min-w-[14rem] grid-cols-3 items-baseline gap-x-6 text-right font-mono text-[11px] uppercase tracking-[0.14em] text-text md:grid">
-          <div>
-            <dt className="sr-only">Language</dt>
-            <dd>{course.language}</dd>
-          </div>
-          <div>
-            <dt className="sr-only">Difficulty</dt>
-            <dd>{course.difficulty}</dd>
-          </div>
-          <div>
-            <dt className="sr-only">Estimated hours</dt>
-            <dd>{hoursRange ?? "—"}</dd>
-          </div>
-        </dl>
-
-        {/* Mobile metadata — inline chips under body */}
-        <div className="col-span-2 col-start-2 -mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[11px] uppercase tracking-[0.14em] text-text-muted md:hidden">
-          <span>{course.language}</span>
-          <span className="text-text-dim">·</span>
-          <span>{course.difficulty}</span>
-          {hoursRange && (
-            <>
-              <span className="text-text-dim">·</span>
-              <span>{hoursRange}</span>
-            </>
-          )}
+        
+        {/* Dynamic difficulty badge */}
+        <div className={`px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider ${
+          course.difficulty === 'hard' 
+            ? 'bg-red-500/10 text-red-500' 
+            : course.difficulty === 'medium'
+            ? 'bg-orange-500/10 text-orange-500'
+            : 'bg-green-500/10 text-green-500'
+        }`}>
+          {course.difficulty}
         </div>
       </div>
 
-      {/* Affordance: arrow glyph on hover, tucked in right gutter */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2 font-mono text-xs text-text-dim opacity-0 transition-opacity duration-200 group-hover:opacity-100 md:right-4"
-      >
-        →
-      </span>
+      {/* Body */}
+      <div className="flex-1">
+        <h3 className="text-xl font-semibold tracking-tight text-text transition-colors duration-300 group-hover:text-primary">
+          {course.title}
+        </h3>
+        <p className="mt-3 line-clamp-2 text-[14px] leading-relaxed text-text-muted">
+          {course.description}
+        </p>
+      </div>
+
+      {/* Progress & Metadata */}
+      <div className="mt-8">
+        {progress && progress.total > 0 && (
+          <div className="mb-4 space-y-2">
+            <div className="flex items-center justify-between text-[12px] font-medium text-text-muted">
+              <span>{progress.lang}</span>
+              <span>{progress.completed} / {progress.total}</span>
+            </div>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-border">
+              <div
+                className="h-full bg-primary transition-all duration-500 ease-out"
+                style={{
+                  width: `${Math.min(100, Math.round((progress.completed / progress.total) * 100))}%`,
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-4 text-[13px] font-medium text-text-muted">
+          <div className="flex items-center gap-1.5">
+            <span className="material-symbols-outlined text-[16px] text-text-dim">code</span>
+            {course.language}
+          </div>
+          {hoursRange && (
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[16px] text-text-dim">schedule</span>
+              {hoursRange}
+            </div>
+          )}
+        </div>
+      </div>
     </Link>
   );
 }

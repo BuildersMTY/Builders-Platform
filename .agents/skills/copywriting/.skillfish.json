@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "copywriting",
+  "owner": "propane-ai",
+  "repo": "kits",
+  "path": "plugins/Marketing/skills/copywriting",
+  "branch": "main",
+  "sha": "1b019d1bba1224ca34b9b5cac28507d557d0f851",
+  "source": "manual"
+}

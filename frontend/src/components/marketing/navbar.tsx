@@ -19,7 +19,7 @@ export function Navbar() {
     <nav
       className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-border bg-bg/90 backdrop-blur-md"
+          ? "border-b border-border bg-bg shadow-sm"
           : "bg-transparent"
       }`}
     >
@@ -36,28 +36,28 @@ export function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
+        <div className="hidden items-center gap-10 md:flex">
           <a
             href="#como-funciona"
-            className="text-[13px] text-text-muted transition-colors hover:text-text"
+            className="text-[13px] font-medium text-text-dim transition-colors hover:text-primary"
           >
-            Cómo funciona
+            Metodología
           </a>
           <a
             href="#proyectos"
-            className="text-[13px] text-text-muted transition-colors hover:text-text"
+            className="text-[13px] font-medium text-text-dim transition-colors hover:text-primary"
           >
             Proyectos
           </a>
           <Link
             href="/pricing"
-            className="text-[13px] text-text-muted transition-colors hover:text-text"
+            className="text-[13px] font-medium text-text-dim transition-colors hover:text-primary"
           >
             Precios
           </Link>
           <Link
             href="/courses"
-            className="inline-flex items-center rounded-full bg-white/10 px-4 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-white/15"
+            className="inline-flex h-9 items-center justify-center rounded-sm border border-primary bg-primary/5 px-5 text-[12px] font-bold text-primary transition-all hover:bg-primary hover:text-bg"
           >
             Comenzar
           </Link>
@@ -72,35 +72,35 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-border bg-bg/95 px-6 py-6 backdrop-blur-md md:hidden">
-          <div className="flex flex-col gap-5">
+        <div className="border-t border-border bg-bg px-6 py-8 md:hidden">
+          <div className="flex flex-col gap-6">
             <a
               href="#como-funciona"
-              className="text-sm text-text-muted hover:text-text"
+              className="text-[15px] font-medium text-text-dim hover:text-primary"
               onClick={() => setMobileOpen(false)}
             >
-              Cómo funciona
+              Metodología
             </a>
             <a
               href="#proyectos"
-              className="text-sm text-text-muted hover:text-text"
+              className="text-[15px] font-medium text-text-dim hover:text-primary"
               onClick={() => setMobileOpen(false)}
             >
               Proyectos
             </a>
             <Link
               href="/pricing"
-              className="text-sm text-text-muted hover:text-text"
+              className="text-[15px] font-medium text-text-dim hover:text-primary"
               onClick={() => setMobileOpen(false)}
             >
               Precios
             </Link>
             <Link
               href="/courses"
-              className="inline-flex w-fit items-center rounded-full bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
+              className="inline-flex h-11 items-center justify-center rounded-sm border border-primary bg-primary/5 px-4 text-[14px] font-bold text-primary transition-all active:bg-primary active:text-bg"
               onClick={() => setMobileOpen(false)}
             >
-              Comenzar
+              Comenzar ahora
             </Link>
           </div>
         </div>

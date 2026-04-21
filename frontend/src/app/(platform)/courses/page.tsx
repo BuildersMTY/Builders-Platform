@@ -30,9 +30,10 @@ export default async function CoursesPage() {
         <section className="pt-14 pb-10 md:pt-20 md:pb-12">
           <div className="flex items-start justify-between gap-10">
             <div className="max-w-2xl">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
-                Vol. I · Proyectos
-              </p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-[12px] font-medium text-text-muted mb-4">
+                <span className="flex h-2 w-2 rounded-full bg-primary" />
+                <span>Vol. I · Proyectos</span>
+              </div>
               <h1 className="mt-4 text-4xl font-medium leading-[1.05] tracking-tight md:text-5xl">
                 Retos de ingeniería,{" "}
                 <span className="font-serif italic text-primary">escritos para builders</span>.
@@ -43,27 +44,27 @@ export default async function CoursesPage() {
               </p>
             </div>
             {/* Meta slab — catalog density, quiet but factual */}
-            <aside className="hidden min-w-[12rem] border-l border-border pl-6 font-mono text-[11px] uppercase tracking-[0.14em] md:block">
-              <dl className="space-y-3 text-text-muted">
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-text-dim">entries</dt>
-                  <dd className="tabular-nums text-text">
+            <aside className="hidden min-w-[12rem] border-l border-border pl-6 text-[13px] font-medium md:block">
+              <dl className="space-y-4 text-text-muted">
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-text-dim">Proyectos</dt>
+                  <dd className="tabular-nums text-text font-semibold">
                     {String(count).padStart(2, "0")}
                   </dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-text-dim">format</dt>
-                  <dd className="text-text">Project</dd>
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-text-dim">Formato</dt>
+                  <dd className="text-text font-semibold">Práctico</dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-text-dim">rigor</dt>
-                  <dd className="text-text">Tested</dd>
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-text-dim">Rigor</dt>
+                  <dd className="text-text font-semibold">Unit Tested</dd>
                 </div>
-                <div className="flex items-baseline justify-between gap-4">
-                  <dt className="text-text-dim">live</dt>
-                  <dd className="flex items-center gap-1.5 text-text">
-                    <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
-                    on
+                <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
+                  <dt className="text-text-dim">Status</dt>
+                  <dd className="flex items-center gap-2 text-text font-semibold">
+                    <span className="inline-block h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.6)]" />
+                    En vivo
                   </dd>
                 </div>
               </dl>
@@ -71,52 +72,30 @@ export default async function CoursesPage() {
           </div>
         </section>
 
-        {/* Column header — aligns with the CourseCard grid. */}
-        <div className="border-t border-b border-border bg-surface/40">
-          <div className="grid grid-cols-[3.5rem_1fr_auto] items-baseline gap-6 px-4 py-3 md:gap-10 md:px-6">
-            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-dim">
-              №
-            </span>
-            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-text-dim">
-              <span>Project</span>
-              <span className="h-px flex-1 bg-border" />
-              <span className="tabular-nums">
-                {count} {count === 1 ? "entry" : "entries"}
-              </span>
-            </div>
-            <dl className="hidden min-w-[14rem] grid-cols-3 gap-x-6 text-right font-mono text-[10px] uppercase tracking-[0.18em] text-text-dim md:grid">
-              <span>lang</span>
-              <span>level</span>
-              <span>est</span>
-            </dl>
-          </div>
-        </div>
-
-        {/* The index itself, or an empty state with the same typographic voice. */}
-        {count === 0 ? (
-          <div className="border-b border-border px-4 py-16 md:px-6">
-            <div className="max-w-xl">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-dim">
-                Estado · En prensa
-              </p>
-              <p className="mt-4 font-serif text-2xl italic leading-snug text-text">
+        <div className="my-10">
+          {count === 0 ? (
+            <div className="rounded-2xl border border-border bg-surface px-8 py-16 md:px-12 text-center flex flex-col items-center">
+              <div className="inline-flex items-center gap-2 rounded-full bg-surface-alt px-3 py-1 text-[12px] font-medium text-text-muted mb-6">
+                En prensa
+              </div>
+              <p className="font-serif text-3xl italic leading-snug text-text">
                 Los primeros proyectos entran a imprenta.
               </p>
-              <p className="mt-4 text-sm leading-relaxed text-text-muted">
+              <p className="mt-4 max-w-md text-[14px] leading-relaxed text-text-muted">
                 Editor completo, pruebas automatizadas y entorno listo desde el primer commit.
                 Vuelve pronto — o sigue construyendo.
               </p>
             </div>
-          </div>
-        ) : (
-          <ol className="divide-border">
-            {courses.map((course, i) => (
-              <li key={course.slug}>
-                <CourseCard course={course} index={i} />
-              </li>
-            ))}
-          </ol>
-        )}
+          ) : (
+            <ol className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {courses.map((course, i) => (
+                <li key={course.slug} className="flex">
+                  <CourseCard course={course} index={i} />
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
 
         {/* Colophon — tiny, editorial sign-off. Keeps the page feeling finished. */}
         <footer className="mt-20 border-t border-border py-8">

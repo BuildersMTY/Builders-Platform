@@ -1,40 +1,47 @@
+import { CourseSnippetCard } from "@/components/courses/course-snippet-card";
+
 export function Manifesto() {
   return (
     <section className="relative overflow-hidden px-6 py-32 md:py-48">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-12 gap-x-6">
-        {/* Attribution strip — mono, runs vertically on desktop like a margin note */}
-        <div className="col-span-12 md:col-span-2">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-text-dim">
-            § Manifiesto
-          </p>
-        </div>
-
-        {/* Pull quote — full serif, offset, oversized */}
+      <div className="mx-auto grid max-w-[1200px] grid-cols-12 gap-x-12 items-center">
+        {/* Pull quote — col 1-8 */}
         <blockquote
-          className="col-span-12 mt-6 md:col-span-10 md:mt-0"
+          className="col-span-12 md:col-span-8"
           style={{ letterSpacing: "-0.015em" }}
         >
+          <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary mb-6">
+            § El Manifiesto
+          </p>
           <p
             className="font-serif italic text-text"
             style={{
               fontSize: "clamp(1.75rem, 0.9rem + 2.8vw, 3.5rem)",
-              lineHeight: 1.18,
+              lineHeight: 1.15,
             }}
           >
-            Los mejores ingenieros no nacieron viendo tutoriales. Leyeron
-            especificaciones, rompieron cosas, escribieron pruebas y volvieron
-            a empezar. Aquí haces{" "}
-            <span className="not-italic font-sans font-semibold text-text">
-              lo mismo
+            En la era de la IA, el código es barato, pero el razonamiento es{" "}
+            <span className="not-italic font-sans font-semibold text-text border-b-2 border-primary/20">
+              oro
             </span>
-            , sin perder un fin de semana configurando el entorno.
+            . Aquí vienes a fortalecer el criterio que te hace un ingeniero, no
+            un operador de prompts.
           </p>
 
           <footer className="mt-10 flex items-center gap-4 font-mono text-[11px] uppercase tracking-[0.22em] text-text-dim">
             <span className="h-px w-10 bg-border" />
-            <span>Builders · MX</span>
+            <span>Builders Platform · 2026</span>
           </footer>
         </blockquote>
+
+        {/* Asymmetric Snippet — col 9-12 */}
+        <div className="hidden md:flex col-span-4 justify-end">
+          <CourseSnippetCard 
+            title="HTTP Server de Alto Rendimiento"
+            difficulty="intermediate"
+            icon="λ"
+            slug="http-server-extreme"
+          />
+        </div>
       </div>
     </section>
   );
