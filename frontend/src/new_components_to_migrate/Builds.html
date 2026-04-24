@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Builds — Buildmancer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0808; --bg-deep: #070606;
+    --surface: #0f0d0d; --surface-alt: #141111;
+    --surface-hover: #1a1616; --surface-active: #201b1b;
+    --border: #221f1f; --border-strong: #2e2929; --border-bright: #3a3333;
+    --primary: #ff2b2b; --primary-hover: #ff4848;
+    --primary-dim: rgba(255, 43, 43, 0.14);
+    --primary-glow: rgba(255, 43, 43, 0.35);
+    --text: #f5f3f0; --text-muted: #a6a19a; --text-dim: #6b6660; --text-faint: #4a4540;
+    --success: #6fd6b8; --success-dim: rgba(111, 214, 184, 0.12);
+    --error: #ff6b5b; --error-dim: rgba(255, 107, 91, 0.10);
+    --warning: #ffb347; --warning-dim: rgba(255, 179, 71, 0.10);
+    --info: #7aa7ff;
+    --font-sans: 'Sora', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+    --font-serif: 'Bodoni Moda', ui-serif, Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg); color: var(--text);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100%;
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-strong); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--border-bright); }
+  ::selection { background: var(--primary-dim); color: var(--text); }
+  .noise-bg { position: relative; }
+  .noise-bg::before {
+    content: ""; position: absolute; inset: 0;
+    pointer-events: none; opacity: 0.25; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  @keyframes ambient-drift { 0%,100% { transform: translate(0,0); opacity:.5; } 50% { transform: translate(14px, -10px); opacity:.7; } }
+  @keyframes slide-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes shimmer { 0% { background-position: -200px 0; } 100% { background-position: 200px 0; } }
+  button { font: inherit; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="workspace/icons.jsx"></script>
+<script type="text/babel" src="courses/data.jsx"></script>
+<script type="text/babel" src="courses/chrome.jsx"></script>
+<script type="text/babel" src="builds/app.jsx"></script>
+</body>
+</html>
