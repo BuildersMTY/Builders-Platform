@@ -29,7 +29,7 @@ export default async function CourseDetailPage({ params }: Props) {
           Proyecto no encontrado.
         </p>
         <Link
-          href="/courses"
+          href="/courses-old"
           className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted hover:text-text"
         >
           &larr; volver al indice
@@ -87,7 +87,7 @@ export default async function CourseDetailPage({ params }: Props) {
             <span className="font-bold">Buildmancer</span>
           </Link>
           <Link
-            href="/courses"
+            href="/courses-old"
             className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted transition-colors hover:text-text"
           >
             <ArrowLeft size={13} />
@@ -169,7 +169,7 @@ export default async function CourseDetailPage({ params }: Props) {
               Esto no es un tutorial. Es un proyecto real con pruebas reales.
             </p>
             <Link
-              href="/courses"
+              href="/courses-old"
               className="inline-flex shrink-0 items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted transition-colors hover:text-text"
             >
               <ArrowLeft size={13} />

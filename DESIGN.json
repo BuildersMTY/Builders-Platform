@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-07T13:00:00Z",
+  "title": "Design System: Buildmancer",
+  "extensions": {
+    "colorMeta": {
+      "ink-black": { "role": "neutral", "displayName": "Ink Black", "canonical": "#0a0808", "tonalRamp": ["#070606", "#0a0808", "#0f0d0d", "#141111", "#1a1616", "#201b1b", "#2a2727", "#3a3333"] },
+      "blood-red": { "role": "primary", "displayName": "Blood Red", "canonical": "#ff2b2b", "tonalRamp": ["#4a0a0a", "#7a1212", "#a31a1a", "#cc2222", "#ff2b2b", "#ff4848", "#ff6b5b", "#ff9999"] },
+      "warm-white": { "role": "neutral", "displayName": "Warm White", "canonical": "#f5f3f0", "tonalRamp": ["#4a4540", "#6b6660", "#8a857e", "#a6a19a", "#c4c0b8", "#ddd9d2", "#ece9e4", "#f5f3f0"] },
+      "mint": { "role": "functional", "displayName": "Mint", "canonical": "#6fd6b8", "tonalRamp": ["#1a4a3d", "#2a6b58", "#3d8f75", "#55b899", "#6fd6b8", "#8ee0c8", "#b0ead8", "#d4f4eb"] },
+      "coral": { "role": "functional", "displayName": "Coral", "canonical": "#ff6b5b", "tonalRamp": ["#5c1a14", "#8a2a22", "#b83f35", "#e05548", "#ff6b5b", "#ff8a7d", "#ffaaa0", "#ffccc6"] },
+      "sky": { "role": "functional", "displayName": "Sky", "canonical": "#7aa7ff", "tonalRamp": ["#1a2e5c", "#2a458a", "#3d5fb8", "#557ce0", "#7aa7ff", "#99bbff", "#b8d0ff", "#d6e4ff"] },
+      "amber": { "role": "functional", "displayName": "Amber", "canonical": "#ffb347", "tonalRamp": ["#5c3a0a", "#8a5a14", "#b87a22", "#e09a35", "#ffb347", "#ffc46a", "#ffd48e", "#ffe4b3"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero headlines, landing page mastheads. One per page." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles, page headers. Serif italic for editorial emphasis." },
+      "title": { "displayName": "Title", "purpose": "Card titles, module headers, sub-sections." },
+      "body": { "displayName": "Body", "purpose": "Body copy, descriptions. Max 65-75ch line length." },
+      "label": { "displayName": "Label", "purpose": "Data labels, metadata, timestamps, tab labels. Always uppercase, wide tracking." }
+    },
+    "shadows": [
+      { "name": "structural", "value": "0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px var(--border)", "purpose": "Modals, command palettes, drawers. Heavy, diffuse, grounded." },
+      { "name": "ambient-glow", "value": "0 0 18px var(--primary-glow)", "purpose": "Primary button hover, active states. Subtle red aura." },
+      { "name": "none", "value": "none", "purpose": "Cards, panels, nav, content surfaces. Flat. Depth via background color only." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default easing for state transitions." },
+      { "name": "ease-expo-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Orchestrated entrances, hero animations." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Hover states, focus rings." },
+      { "name": "duration-standard", "value": "200ms", "purpose": "State transitions, tab switches." },
+      { "name": "duration-slow", "value": "300ms", "purpose": "Page transitions, section reveals." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The primary action. Blood red, uppercase, sharp. Used sparingly.",
+      "html": "<button class=\"ds-btn-primary\">LOGIN</button>",
+      "css": ".ds-btn-primary { background: #ff2b2b; color: #f5f3f0; padding: 12px 24px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 0; cursor: pointer; transition: background 200ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-btn-primary:hover { background: #ff4848; } .ds-btn-primary:focus-visible { outline: 2px solid #ff2b2b; outline-offset: 2px; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action. Transparent with border. Hover brightens.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button>",
+      "css": ".ds-btn-ghost { background: transparent; color: #a6a19a; padding: 8px 16px; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; border: 1px solid #2e2929; border-radius: 0; cursor: pointer; transition: border-color 200ms, color 200ms; } .ds-btn-ghost:hover { border-color: #3a3333; color: #f5f3f0; } .ds-btn-ghost:focus-visible { outline: 2px solid #ff2b2b; outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Form input. Sharp, 2px border, surface background.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Enter value...\" />",
+      "css": ".ds-input { background: #0f0d0d; color: #f5f3f0; padding: 10px 14px; font-family: 'Sora', sans-serif; font-size: 14px; border: 2px solid #2e2929; border-radius: 0; outline: none; transition: border-color 200ms; width: 100%; } .ds-input::placeholder { color: #4a4540; font-style: italic; } .ds-input:focus { border-color: #ff2b2b; } .ds-input:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Content container. Sharp, 2px border, surface background.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Card Title</h3><p class=\"ds-card-body\">Card content goes here.</p></div>",
+      "css": ".ds-card { background: #0f0d0d; color: #f5f3f0; padding: 24px; border: 2px solid #221f1f; border-radius: 0; transition: border-color 200ms, transform 200ms; } .ds-card:hover { border-color: #3a3333; transform: translateY(-1px); } .ds-card-title { font-family: 'Bodoni Moda', serif; font-size: 20px; font-weight: 400; margin: 0 0 12px 0; } .ds-card-body { font-family: 'Sora', sans-serif; font-size: 14px; line-height: 1.65; color: #a6a19a; margin: 0; }"
+    },
+    {
+      "name": "Navigation Tab",
+      "kind": "nav",
+      "refersTo": "nav-tab",
+      "description": "Tab navigation. Mono label, ash default, red underline on active.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-tab ds-nav-tab-active\" href=\"#\">Active</a><a class=\"ds-nav-tab\" href=\"#\">Inactive</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 2px; } .ds-nav-tab { padding: 8px 14px; font-family: 'Sora', sans-serif; font-size: 13px; letter-spacing: -0.005em; color: #6b6660; text-decoration: none; border-bottom: 2px solid transparent; position: relative; transition: color 200ms; } .ds-nav-tab:hover { color: #f5f3f0; } .ds-nav-tab-active { color: #f5f3f0; } .ds-nav-tab-active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; background: #ff2b2b; box-shadow: 0 0 8px rgba(255, 43, 43, 0.35); }"
+    },
+    {
+      "name": "LangBadge",
+      "kind": "chip",
+      "refersTo": "lang-badge",
+      "description": "Language indicator. Colored dot + mono label. Lowercase.",
+      "html": "<span class=\"ds-lang-badge\"><span class=\"ds-lang-dot\"></span>Go</span>",
+      "css": ".ds-lang-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.04em; color: #7ed5d0; border: 1px solid rgba(126, 213, 208, 0.2); background: rgba(126, 213, 208, 0.05); text-transform: lowercase; } .ds-lang-dot { width: 4px; height: 4px; border-radius: 50%; background: #7ed5d0; box-shadow: 0 0 5px rgba(126, 213, 208, 0.6); }"
+    },
+    {
+      "name": "Error State",
+      "kind": "input",
+      "refersTo": "input-error",
+      "description": "Input error state. Coral border, coral message below.",
+      "html": "<div class=\"ds-input-error-wrap\"><input class=\"ds-input-error\" type=\"text\" value=\"invalid\" /><span class=\"ds-error-msg\">Invalid email format</span></div>",
+      "css": ".ds-input-error-wrap { display: flex; flex-direction: column; gap: 6px; } .ds-input-error { background: #0f0d0d; color: #f5f3f0; padding: 10px 14px; font-family: 'Sora', sans-serif; font-size: 14px; border: 2px solid #ff6b5b; border-radius: 0; outline: none; } .ds-error-msg { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #ff6b5b; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Editor's Desk",
+    "overview": "A magazine editor's workspace at 2am — editorial restraint, sharp tools, red pen marks. The interface feels like it was made by someone who cares deeply about craft, not a template shop. Dark, dense, and confident. Every pixel earns its place.\n\nBuildmancer is a product surface first, but the brand voice is editorial. Marketing pages lean magazine: serif display type, asymmetric compositions, generous whitespace. Product screens are the opposite: information-dense, no wasted space, developers want to see more at once.",
+    "keyCharacteristics": [
+      "Dark-only, no toggle. Dark is the brand.",
+      "Blood-red is scarce — one red element per viewport on marketing.",
+      "Sharp corners everywhere (0px radius). No rounded cards.",
+      "Editorial typography: Bodoni Moda for display, Sora for body, JetBrains Mono for data.",
+      "Density where it matters: workspace screens are packed, marketing is spacious.",
+      "Motion is a scalpel: one orchestrated entrance per page, subtle opacity shifts on hover."
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "The primary accent (blood red) is used on ≤10% of any given screen. Its rarity is the point. If everything is highlighted, nothing is highlighted.", "section": "colors" },
+      { "name": "The Mono-For-Data Rule", "body": "Any string that represents a technical value (file paths, commit hashes, test counts, timestamps, language labels) is set in JetBrains Mono. This creates an instant visual hierarchy: serif for voice, sans for narrative, mono for facts.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Surfaces are flat at rest. Shadows appear only as a response to state (hover elevation, modal overlay, focus). If a card has a shadow, it's wrong.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use blood red sparingly. One red element per viewport on marketing. Red = live, active, primary action only.",
+      "Do use serif italic for editorial emphasis in headlines and display text.",
+      "Do use mono for all technical data, labels, and metadata.",
+      "Do keep corners sharp (0px radius) everywhere. No exceptions.",
+      "Do use tonal layering for depth. Surface → surface-alt → bg-deep creates hierarchy without shadows.",
+      "Do use 2px borders for cards and containers. 1px is too thin for dark themes.",
+      "Do respect reduced motion. All animations should be subtle opacity/shift transitions."
+    ],
+    "donts": [
+      "Don't use rounded corners on any component. No cards, no buttons, no inputs.",
+      "Don't use gradient text or gradient backgrounds. Banned by brand.",
+      "Don't use glassmorphism, blur-heavy cards, or neon gradients.",
+      "Don't use border-left accent stripes on cards or list items.",
+      "Don't use the hero-metric template (big number + small label + gradient accent).",
+      "Don't use identical card grids with icon + heading + paragraph triptychs.",
+      "Don't look like a bootcamp site (Platzi, freeCodeCamp, Codecademy).",
+      "Don't use purple-blue gradients, cyan accents, or 'AI startup aesthetic.'",
+      "Don't use social login buttons on auth screens. This is a private club, not a SaaS tool.",
+      "Don't use em dashes in copy. Use commas, colons, semicolons, or periods."
+    ]
+  }
+}
