@@ -1,7 +1,16 @@
+"use client";
+
+import { AuthProvider } from "@/components/auth/auth-provider";
+import { PlatformGuard } from "@/components/auth/platform-guard";
+
 export default function PlatformLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <AuthProvider>
+      <PlatformGuard>{children}</PlatformGuard>
+    </AuthProvider>
+  );
 }

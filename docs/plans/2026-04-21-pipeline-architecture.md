@@ -7,6 +7,7 @@
 **Horizon:** 6-week GTM window (matches approved design doc)
 
 Related docs:
+
 - `.gstack/projects/BuildersMTY-Builders-Platform/raul-main-design-20260421-095545.md` (strategy)
 - `COURSES.md`, `AUTHORING.md`, `PLATFORM.md`, `ROADMAP.md` (contracts)
 - `FUNNEL.md` (auth / student verification)
@@ -126,13 +127,13 @@ Phases mirror design-doc GTM weeks. Each phase has an ordered task list with own
 
 Goal: close the three bugs that would embarrass us on the first Phase-1 smoke test. These are small, independent, and land together. Ship before any further feature work.
 
-| # | Task | Effort (CC) | File |
-|---|------|-------------|------|
-| 0.1 | Fix `unit_cmd` propagation. Inject `BUILDMANCER_UNIT_CMD` into env list in `handler.HandleRun` before calling dispatchers. Add regression test: pytest course triggers `pytest -k ...`, not `go test`. | 20 min | `backend/runner/internal/handler/run.go`, `unit_test.go` |
-| 0.2 | Progress INSERT-OR-IGNORE. Use `on_conflict_do_nothing` in `stream.py`. Regression test: POST same passing submodule twice, single row. | 20 min | `backend/api/routers/stream.py`, `tests/api/test_run.py` |
-| 0.3 | Scanner buffer bump to 1 MB across `build.go`, `unit.go`, `stdout.go`, `script.go`. Regression test: simulate long build output. | 15 min | four `.go` files |
-| 0.4 | Merge run+stream into single SSE POST endpoint. `POST /api/run/{slug}/{lang}/{sub}` returns `EventSourceResponse` directly, drops `pending_runs`. Progress committed server-side on `run_complete`. | 1.5 h | `backend/api/routers/run.py`, `stream.py` (delete), `main.py`, frontend SSE client. |
-| 0.5 | Per-user concurrent-run cap (semaphore, max 1 active run per user_id, return 429 otherwise). | 30 min | `backend/api/routers/run.py` |
+| #   | Task                                                                                                                                                                                                   | Effort (CC) | File                                                                                |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | ----------------------------------------------------------------------------------- |
+| 0.1 | Fix `unit_cmd` propagation. Inject `BUILDMANCER_UNIT_CMD` into env list in `handler.HandleRun` before calling dispatchers. Add regression test: pytest course triggers `pytest -k ...`, not `go test`. | 20 min      | `backend/runner/internal/handler/run.go`, `unit_test.go`                            |
+| 0.2 | Progress INSERT-OR-IGNORE. Use `on_conflict_do_nothing` in `stream.py`. Regression test: POST same passing submodule twice, single row.                                                                | 20 min      | `backend/api/routers/stream.py`, `tests/api/test_run.py`                            |
+| 0.3 | Scanner buffer bump to 1 MB across `build.go`, `unit.go`, `stdout.go`, `script.go`. Regression test: simulate long build output.                                                                       | 15 min      | four `.go` files                                                                    |
+| 0.4 | Merge run+stream into single SSE POST endpoint. `POST /api/run/{slug}/{lang}/{sub}` returns `EventSourceResponse` directly, drops `pending_runs`. Progress committed server-side on `run_complete`.    | 1.5 h       | `backend/api/routers/run.py`, `stream.py` (delete), `main.py`, frontend SSE client. |
+| 0.5 | Per-user concurrent-run cap (semaphore, max 1 active run per user_id, return 429 otherwise).                                                                                                           | 30 min      | `backend/api/routers/run.py`                                                        |
 
 **Phase 0 ships as one PR.** No new features, just correctness + resilience.
 
@@ -140,13 +141,13 @@ Goal: close the three bugs that would embarrass us on the first Phase-1 smoke te
 
 Goal: prepare the runner for Docker + Modal without flipping the default. LocalExec is still what runs. Dispatchers stop touching `os/exec`.
 
-| # | Task | Effort (CC) | Notes |
-|---|------|-------------|-------|
-| 1.1 | Define `Executor` interface in `backend/runner/internal/executor/executor.go`: `Prepare`, `Build`, `Spawn`, `Exec`, `Cleanup`. Include `Env` struct with workspace, env vars, port. | 45 min | Types only, no implementation. |
-| 1.2 | Implement `LocalExec` matching current behavior. Wraps `exec.CommandContext("bash", "-c", ...)`, tmpdir-based workspace, current env inheritance. | 1 h | |
-| 1.3 | Refactor each dispatcher to call `env.Spawn` / `env.Exec` instead of `exec.Command`. Keep signatures identical, keep SSE events identical. One commit per dispatcher so diffs stay tiny. | 2 h | 5 dispatchers |
-| 1.4 | `handler.HandleRun` picks executor from runner-URL scheme (`local://` default, scheme parsed from `req.Runner`). Falls back to LocalExec with warning if unknown. | 30 min | |
-| 1.5 | Update runner tests to stub Executor, not OS. Adds an `ExecutorMock` used by handler_test. | 1 h | |
+| #   | Task                                                                                                                                                                                     | Effort (CC) | Notes                          |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ------------------------------ |
+| 1.1 | Define `Executor` interface in `backend/runner/internal/executor/executor.go`: `Prepare`, `Build`, `Spawn`, `Exec`, `Cleanup`. Include `Env` struct with workspace, env vars, port.      | 45 min      | Types only, no implementation. |
+| 1.2 | Implement `LocalExec` matching current behavior. Wraps `exec.CommandContext("bash", "-c", ...)`, tmpdir-based workspace, current env inheritance.                                        | 1 h         |                                |
+| 1.3 | Refactor each dispatcher to call `env.Spawn` / `env.Exec` instead of `exec.Command`. Keep signatures identical, keep SSE events identical. One commit per dispatcher so diffs stay tiny. | 2 h         | 5 dispatchers                  |
+| 1.4 | `handler.HandleRun` picks executor from runner-URL scheme (`local://` default, scheme parsed from `req.Runner`). Falls back to LocalExec with warning if unknown.                        | 30 min      |                                |
+| 1.5 | Update runner tests to stub Executor, not OS. Adds an `ExecutorMock` used by handler_test.                                                                                               | 1 h         |                                |
 
 **Phase 1 ships after Phase 0 merges.** Zero functional change — passes old tests plus new Executor interface tests.
 
@@ -154,14 +155,14 @@ Goal: prepare the runner for Docker + Modal without flipping the default. LocalE
 
 Goal: Phase-1 smoke test (5 friends free) runs inside Docker. Strangers beta (Phase 2 of design doc) requires this merged.
 
-| # | Task | Effort (CC) | Notes |
-|---|------|-------------|-------|
-| 2.1 | Build per-language runner images in `backend/runner/images/{go,c,python,rust,javascript}/Dockerfile`. Each has toolchain + bash + curl + nc. Publish to `buildersmty/runner-{lang}:latest`. | 2 h | GitHub Actions build-and-push workflow |
-| 2.2 | Implement `DockerExec`. `Prepare` = `docker create` with `--memory=256m --cpus=0.5 --network=none --read-only --tmpfs /workspace:rw,exec,size=128m --init`. `Exec` = `docker exec`. `Spawn` = `docker exec -d` with port-forward via `-p`. `Cleanup` = `docker kill && docker rm`. | 3 h | Windows dev path uses Docker Desktop; runner container itself runs on host so docker-in-docker is avoided by mounting host Docker socket read-only. Document trade-off. |
-| 2.3 | `meta.runner` in course.yaml becomes the image tag. Already exists in schema. Add scheme parsing — `docker://buildersmty/runner-go:latest` default. | 30 min | |
-| 2.4 | Resource-limit regression tests: OOM, forkbomb, egress-to-internet. All should be contained. Each as a `script` test run in a throwaway course, asserting specific failure. | 2 h | Security smoke suite |
-| 2.5 | Flip default on dev + prod. Keep `local://` as an explicit opt-in for fast local iteration when developing a course. | 15 min | Document in AUTHORING.md |
-| 2.6 | Warm container policy decision (keep NONE for v1 — measure cold start with Go/Python first; only add a pool if the median run exceeds 2 s or the user complains). | — | Defer |
+| #   | Task                                                                                                                                                                                                                                                                               | Effort (CC) | Notes                                                                                                                                                                   |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2.1 | Build per-language runner images in `backend/runner/images/{go,c,python,rust,javascript}/Dockerfile`. Each has toolchain + bash + curl + nc. Publish to `buildersmty/runner-{lang}:latest`.                                                                                        | 2 h         | GitHub Actions build-and-push workflow                                                                                                                                  |
+| 2.2 | Implement `DockerExec`. `Prepare` = `docker create` with `--memory=256m --cpus=0.5 --network=none --read-only --tmpfs /workspace:rw,exec,size=128m --init`. `Exec` = `docker exec`. `Spawn` = `docker exec -d` with port-forward via `-p`. `Cleanup` = `docker kill && docker rm`. | 3 h         | Windows dev path uses Docker Desktop; runner container itself runs on host so docker-in-docker is avoided by mounting host Docker socket read-only. Document trade-off. |
+| 2.3 | `meta.runner` in course.yaml becomes the image tag. Already exists in schema. Add scheme parsing — `docker://buildersmty/runner-go:latest` default.                                                                                                                                | 30 min      |                                                                                                                                                                         |
+| 2.4 | Resource-limit regression tests: OOM, forkbomb, egress-to-internet. All should be contained. Each as a `script` test run in a throwaway course, asserting specific failure.                                                                                                        | 2 h         | Security smoke suite                                                                                                                                                    |
+| 2.5 | Flip default on dev + prod. Keep `local://` as an explicit opt-in for fast local iteration when developing a course.                                                                                                                                                               | 15 min      | Document in AUTHORING.md                                                                                                                                                |
+| 2.6 | Warm container policy decision (keep NONE for v1 — measure cold start with Go/Python first; only add a pool if the median run exceeds 2 s or the user complains).                                                                                                                  | —           | Defer                                                                                                                                                                   |
 
 **Phase 2 ships before Phase-1 smoke-test (week 2 of GTM).**
 
@@ -172,12 +173,14 @@ Goal: `PLATFORM.md` promise delivered. Student ends the course with a repo they'
 #### 3.1 Repo lifecycle
 
 On `POST /api/enroll`:
+
 - Initialize a bare repo at `./repos/{user_id}/{slug}-{lang}.git`.
 - Seed from `_courses/{slug}/{lang}/src/` as the initial commit with message `Initial stubs — {course title}`.
 - Create branch `main` (not `student/*` — this repo is the student's, eventually pushed as their own).
 - Persist metadata in a new `git_repos` table: `(user_id, course_slug, language, repo_path, github_url, github_repo_name, github_visibility, student_commit_name, student_commit_email, created_at)`.
 
 On `run_complete` with `all_passed=true`:
+
 - Read `working_files` for the enrollment.
 - Apply to a fresh worktree in `./repos/{user_id}/{slug}-{lang}.worktree`.
 - Commit with default message template: `pass({module_id}): {submodule_title}` — a Conventional-Commits style that beginners read as normal English. Override at student level via `student_commit_template`.
@@ -185,6 +188,7 @@ On `run_complete` with `all_passed=true`:
 - On failure: no commit. Just a progress row.
 
 On final submodule pass (all progress rows present):
+
 - Generate a README.md (see 3.3).
 - Commit with message `ship: complete {course title}`.
 - Tag `v1.0-{difficulty}`.
@@ -260,6 +264,7 @@ Course content: BuildersMTY, CC BY-NC 4.0.
 The student can edit the README in the graduation modal (9.4) before pushing.
 
 Also generated at completion:
+
 - `ARCHITECTURE.md` from `meta.portfolio.architecture_md` (author-provided, copied verbatim)
 - `LICENSE` from `meta.portfolio.license` (default MIT; inherited by student repo)
 - CV snippet (rendered in UI only, not committed): 3-line markdown block the student pastes into LinkedIn
@@ -270,38 +275,39 @@ Also generated at completion:
 
 Exposed to the student in Settings (per enrollment + global defaults):
 
-| Setting | Default | Scope |
-|---------|---------|-------|
-| Commit name | `Buildmancer Student` | global |
-| Commit email | `student@buildmancer.local` | global |
-| Commit message template | YAML `submodule.commit_message` OR `feat({module_id}): {submodule_title}` | per enrollment |
-| Branching at graduation | direct-to-main | per enrollment (alt: `self-pr-per-module`) |
-| Commit granularity at push | per-submodule (keep) | per enrollment (alt: per-module squash, single-commit) |
-| Auto-push on complete | `false` | per enrollment |
-| Final repo name | `{slug}-{lang}` | per enrollment |
-| Repo visibility | `public` | per enrollment |
-| Regenerate README on edit | `true` | per enrollment |
+| Setting                    | Default                                                                   | Scope                                                  |
+| -------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------ |
+| Commit name                | `Buildmancer Student`                                                     | global                                                 |
+| Commit email               | `student@buildmancer.local`                                               | global                                                 |
+| Commit message template    | YAML `submodule.commit_message` OR `feat({module_id}): {submodule_title}` | per enrollment                                         |
+| Branching at graduation    | direct-to-main                                                            | per enrollment (alt: `self-pr-per-module`)             |
+| Commit granularity at push | per-submodule (keep)                                                      | per enrollment (alt: per-module squash, single-commit) |
+| Auto-push on complete      | `false`                                                                   | per enrollment                                         |
+| Final repo name            | `{slug}-{lang}`                                                           | per enrollment                                         |
+| Repo visibility            | `public`                                                                  | per enrollment                                         |
+| Regenerate README on edit  | `true`                                                                    | per enrollment                                         |
 
 Not exposed:
+
 - Working branch name. Stays `course/{slug}` internally until graduation.
 - Commit author identity (hardcoded to GitHub OAuth once connected — a student editing this would defeat the portfolio purpose).
 - Committer trailer (platform-side metadata for audit/versioning).
 
 #### 3.5 Tasks
 
-| # | Task | Effort (CC) | Notes |
-|---|------|-------------|-------|
-| 3.1 | Go vs Python decision for the git driver. **Pick Python** — `pygit2` or `dulwich`, all existing git calls already in API layer, keeps runner pure-exec. Alternative shells out to `git` CLI (simpler, slower, fine at our scale). **Rec: `git` CLI via subprocess for v1**, swap to `pygit2` only if measured pain. | — | Decision |
-| 3.2 | `git_repos` migration + SQLModel. | 30 min | Alembic revision 002 |
-| 3.3 | `api/git/repo.py` module: `init_repo`, `commit_pass`, `generate_readme`, `finalize`. Uses subprocess git. Writes to `settings.repos_path`. | 2 h | |
-| 3.4 | Hook into enroll flow. | 20 min | `routers/enroll.py` |
-| 3.5 | Hook into stream/run completion path. | 20 min | `routers/run.py` |
-| 3.6 | README Jinja2 template with per-language "run locally" snippet. | 1 h | |
-| 3.7 | Settings routes + UI. | 2 h | `routers/settings.py` + frontend |
-| 3.8 | GitHub OAuth app + push flow. | 3 h | Use existing OAuth scaffolding if any; else vendor authlib |
-| 3.9 | Graduation modal (Section 9.4) with full customization surface. | 3 h | Workspace success-overlay extension |
-| 3.10 | `meta.portfolio` Pydantic model + loader + validator. Jinja2 README template with badges, module summaries, stats block. | 2 h | Consumed by 3.6 |
-| 3.11 | `self-pr-per-module` branching strategy (optional at graduation). Creates N PRs on student GitHub, one per module, pre-filled with module summary. Student self-merges via Buildmancer UI calling GitHub API. | 3 h | Defer to Phase 3.5 if time-crunched |
+| #    | Task                                                                                                                                                                                                                                                                                                                | Effort (CC) | Notes                                                      |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- | ---------------------------------------------------------- |
+| 3.1  | Go vs Python decision for the git driver. **Pick Python** — `pygit2` or `dulwich`, all existing git calls already in API layer, keeps runner pure-exec. Alternative shells out to `git` CLI (simpler, slower, fine at our scale). **Rec: `git` CLI via subprocess for v1**, swap to `pygit2` only if measured pain. | —           | Decision                                                   |
+| 3.2  | `git_repos` migration + SQLModel.                                                                                                                                                                                                                                                                                   | 30 min      | Alembic revision 002                                       |
+| 3.3  | `api/git/repo.py` module: `init_repo`, `commit_pass`, `generate_readme`, `finalize`. Uses subprocess git. Writes to `settings.repos_path`.                                                                                                                                                                          | 2 h         |                                                            |
+| 3.4  | Hook into enroll flow.                                                                                                                                                                                                                                                                                              | 20 min      | `routers/enroll.py`                                        |
+| 3.5  | Hook into stream/run completion path.                                                                                                                                                                                                                                                                               | 20 min      | `routers/run.py`                                           |
+| 3.6  | README Jinja2 template with per-language "run locally" snippet.                                                                                                                                                                                                                                                     | 1 h         |                                                            |
+| 3.7  | Settings routes + UI.                                                                                                                                                                                                                                                                                               | 2 h         | `routers/settings.py` + frontend                           |
+| 3.8  | GitHub OAuth app + push flow.                                                                                                                                                                                                                                                                                       | 3 h         | Use existing OAuth scaffolding if any; else vendor authlib |
+| 3.9  | Graduation modal (Section 9.4) with full customization surface.                                                                                                                                                                                                                                                     | 3 h         | Workspace success-overlay extension                        |
+| 3.10 | `meta.portfolio` Pydantic model + loader + validator. Jinja2 README template with badges, module summaries, stats block.                                                                                                                                                                                            | 2 h         | Consumed by 3.6                                            |
+| 3.11 | `self-pr-per-module` branching strategy (optional at graduation). Creates N PRs on student GitHub, one per module, pre-filled with module summary. Student self-merges via Buildmancer UI calling GitHub API.                                                                                                       | 3 h         | Defer to Phase 3.5 if time-crunched                        |
 
 **Phase 3 ships weeks 3-4.** Can overlap with Phase 2 tail.
 
@@ -313,13 +319,13 @@ Goal: nanoGPT course is authorable and runnable within the existing five-type te
 
 ```yaml
 meta:
-  runner: modal://gpu-a10g  # new scheme
-  resources:                # new (optional)
+  runner: modal://gpu-a10g # new scheme
+  resources: # new (optional)
     gpu: a10g
     cpu: 4
     memory_gb: 16
     timeout_s: 1800
-  datasets:                 # new (optional) — mounted read-only
+  datasets: # new (optional) — mounted read-only
     - name: tinystories
       source: modal-volume://buildmancer-datasets/tinystories
       mount: /data/tinystories
@@ -329,7 +335,7 @@ modules:
     submodules:
       - id: train-tiny
         tests:
-          - type: eval     # NEW sixth test type
+          - type: eval # NEW sixth test type
             match: TestTrainLossBelow
             expected:
               loss_lt: 3.0
@@ -346,22 +352,54 @@ The `eval` type is a `unit` test on steroids: runs the student's training, parse
 - `Spawn`: same as Exec but long-running with checkpoint streaming. For nanoGPT, training progress lines (`step 1000 / 5000, loss 3.41`) stream through as `test_output` events.
 - `Cleanup`: nothing (Modal autoscales down).
 
-#### 4.3 Cost guardrails
+#### 4.3 Cost guardrails and Modal Free Tier (30 USD/mo)
 
-- Per-user monthly GPU budget (default 50 mxn-equivalent; configurable by admin). Hard stop on overage, user sees "out of GPU budget, try again {next_month}" message.
-- Per-run cost estimate before click — "~2 mxn, ~8 min". Design-doc success criterion requires under 5 mxn per run, this is how we prove it.
-- Admin dashboard: cost per course, cost per user, cost per run. Defer until Modal ships; log the events from day one.
+Sustainability on Modal's $30/month credit budget is a P0 requirement until revenue scaling.
+
+- **Platform-wide Budget Cap**: The platform MUST stop all Modal runs if the monthly aggregate cost reaches $25.00 (5.00 buffer for cleanup/storage).
+- **Per-user monthly GPU budget**: Default 50 MXN (~$3 USD) per student. This allows ~10 students to coexist on the $30 platform budget if they use GPUs efficiently.
+- **GPU Tier Prioritization**:
+  - **Safe Tier (T4, A10G)**: Default for all training courses.
+  - **Premium Tier (A100, H100)**: Restricted to admin-only or specific high-difficulty submodules.
+- **Projected Run Count (at $30 budget)**:
+
+| GPU Type | Cost/Hour | Est. 8min Run Cost | Max Runs/Month |
+| -------- | --------- | ------------------ | -------------- |
+| **T4**   | ~$0.59    | ~$0.08             | ~375           |
+| **A10G** | ~$1.10    | ~$0.15             | ~200           |
+| **H100** | ~$4.50    | ~$0.60             | ~50            |
+
+- **Guardrail UI**: Per-run cost estimate before click — "~2 mxn, ~8 min".
+- **Admin dashboard**: Real-time tracking of Modal credit depletion. Alert founder at $15/mo.
+
+#### 4.3.1 Revenue vs. Cost Sustainability
+
+Based on the proposed pricing model, the platform achieves cost-recovery in Beta and profitability at Launch:
+
+| Phase          | Price (MXN) | Est. Cost (A10G) | Margin/User (MXN) | Strategy                                                                      |
+| -------------- | ----------- | ---------------- | ----------------- | ----------------------------------------------------------------------------- |
+| **Pre-launch** | 50 MXN      | ~3-15 MXN        | +35 to +47 MXN    | **Cost Recovery**: Covers the user's Modal usage and contributes to overhead. |
+| **Student**    | 149 MXN     | ~3-15 MXN        | +134 to +146 MXN  | **Sustainable**: Each student covers ~10x their own cost.                     |
+| **Standard**   | 199 MXN     | ~3-15 MXN        | +184 to +196 MXN  | **Profitable**: High margin to subsidize free credits/R&D.                    |
+
+_Note: 50 MXN (Beta) roughly covers ~30 A10G runs or ~60 T4 runs. For most courses, this is sufficient for a single completion with room for errors._
+
+**Growth Path**:
+
+1. **First 10 Users**: Covered by $30 free monthly credits. Total revenue: 500 MXN.
+2. **User 11+**: Revenue from the first 10 users ($25 USD equivalent) pays for the next ~$50 USD of Modal usage.
+3. **Launch**: Once 5 standard users enroll (199 MXN each), the platform has $50 USD in revenue, which pays for ~300+ additional A10G runs beyond the $30 free tier.
 
 #### 4.4 Tasks
 
-| # | Task | Effort (CC) |
-|---|------|-------------|
-| 4.1 | YAML schema extensions (Pydantic models, loader, validator). | 1 h |
-| 4.2 | `eval` dispatcher on the Go side. Reads `metrics.json` from workspace, asserts thresholds. | 2 h |
-| 4.3 | ModalExec implementation. Depends on a Modal account and verified pricing. | 1 day |
-| 4.5 | Cost logging + per-user budget enforcement (middleware on `/api/run`). | 3 h |
-| 4.6 | AUTHORING.md update — `eval` type, Modal meta, dataset mounts. | 1 h |
-| 4.7 | Pilot: port half of nanoGPT (Karpathy video chunks 1-3) to the new YAML. Prove the model works end-to-end. | 1 day |
+| #   | Task                                                                                                       | Effort (CC) |
+| --- | ---------------------------------------------------------------------------------------------------------- | ----------- |
+| 4.1 | YAML schema extensions (Pydantic models, loader, validator).                                               | 1 h         |
+| 4.2 | `eval` dispatcher on the Go side. Reads `metrics.json` from workspace, asserts thresholds.                 | 2 h         |
+| 4.3 | ModalExec implementation. Depends on a Modal account and verified pricing.                                 | 1 day       |
+| 4.5 | Cost logging + per-user budget enforcement (middleware on `/api/run`).                                     | 3 h         |
+| 4.6 | AUTHORING.md update — `eval` type, Modal meta, dataset mounts.                                             | 1 h         |
+| 4.7 | Pilot: port half of nanoGPT (Karpathy video chunks 1-3) to the new YAML. Prove the model works end-to-end. | 1 day       |
 
 **Phase 4 targets weeks 5-6** per design doc GTM plan.
 
@@ -414,22 +452,22 @@ Three levels, ship v1 immediately, v2 when contributor pain measurable:
 Per Agent-B: cut YAML verbosity. Optional `resources_dir:` at submodule level (defaults to `resources/{module.id}/{submodule.id}/`) + shorthand form:
 
 ```yaml
-resources: [spec.md, signature.md, hint.md]   # type inferred from filename, visible_to from convention
+resources: [spec.md, signature.md, hint.md] # type inferred from filename, visible_to from convention
 ```
 
 Long form still valid; shorthand compiles to long form at load time. Cuts ~40% of YAML lines on a typical course. Loader change ~30 lines.
 
 #### 5.4 Tasks
 
-| # | Task | Effort (CC) |
-|---|------|-------------|
-| 5.1 | CLI scaffolding (click or typer), `validate` with structural checks. | 2 h |
-| 5.2 | `test` command via LocalExec client. | 2 h |
-| 5.3 | `stub-diff` signature AST check — Go first, Python + JS next. | 4 h |
-| 5.4 | `new-course` / `new-submodule` scaffolders with minimal working template. | 2 h |
-| 5.5 | Resource shorthand loader support + shorthand→longhand compilation. | 1 h |
-| 5.6 | GitHub Actions workflow: validate + test + stub-diff on every PR. | 1 h |
-| 5.7 | AUTHORING.md rewrite: "Validating your course locally" references CLI; add `AUTHORING-ML.md` appendix (Phase 4 parallel). | 1 h |
+| #   | Task                                                                                                                      | Effort (CC) |
+| --- | ------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| 5.1 | CLI scaffolding (click or typer), `validate` with structural checks.                                                      | 2 h         |
+| 5.2 | `test` command via LocalExec client.                                                                                      | 2 h         |
+| 5.3 | `stub-diff` signature AST check — Go first, Python + JS next.                                                             | 4 h         |
+| 5.4 | `new-course` / `new-submodule` scaffolders with minimal working template.                                                 | 2 h         |
+| 5.5 | Resource shorthand loader support + shorthand→longhand compilation.                                                       | 1 h         |
+| 5.6 | GitHub Actions workflow: validate + test + stub-diff on every PR.                                                         | 1 h         |
+| 5.7 | AUTHORING.md rewrite: "Validating your course locally" references CLI; add `AUTHORING-ML.md` appendix (Phase 4 parallel). | 1 h         |
 
 **Phase 5 ships weeks 3-4** in parallel with Phase 3.
 
@@ -448,25 +486,25 @@ meta:
   # Existing fields unchanged.
   runner: docker://buildersmty/runner-go:latest
 
-  runtime:                                       # NEW — executor declaration
-    target: local | docker | modal               # default docker; local for fast dev
-    modal:                                       # required when target=modal
-      gpu: T4 | A10G | A100 | H100
+  runtime: # NEW — executor declaration
+    target: local | docker | modal # default docker; local for fast dev
+    modal: # required when target=modal
+      gpu: T4 | A10G # DEFAULT to Safe Tier; avoid H100
       timeout_s: 600
       volume: modal-volume://nanogpt-openwebtext-10k
       image: buildersmty/runner-modal-pytorch:latest
 
-  portfolio:                                     # NEW — repo-as-CV contract
+  portfolio: # NEW — repo-as-CV contract
     readme_tagline: "A from-scratch HTTP/1.1 server in Go"
-    architecture_md: portfolio/architecture.md   # author-written, copied into student repo
+    architecture_md: portfolio/architecture.md # author-written, copied into student repo
     badges: [language, lines-of-code, tier]
-    license: MIT                                 # inherited by student repo
-    module_summaries:                            # per-module blurbs rendered in README
+    license: MIT # inherited by student repo
+    module_summaries: # per-module blurbs rendered in README
       tcp: "TCP listener + goroutine-per-connection"
       parsing: "Byte-level HTTP/1.1 request parsing"
       # ...
 
-  warmup:                                        # NEW — pre-module-0 onramp
+  warmup: # NEW — pre-module-0 onramp
     title: "Antes de empezar"
     resources:
       - title: "What is an HTTP server, really?"
@@ -478,27 +516,27 @@ modules:
     submodules:
       - id: listen
         kind: exercise | reading | guided-prompt # NEW — default exercise
-        warmup: true                             # NEW — flags "onramp" submodule (special UI)
-        estimated_minutes:                       # NEW — per-level, per-submodule
+        warmup: true # NEW — flags "onramp" submodule (special UI)
+        estimated_minutes: # NEW — per-level, per-submodule
           junior: 15
           mid: 8
           senior: 3
-        commit_message: "feat(tcp): implement listener with goroutine-per-connection"   # NEW
-        commit_body: |                           # NEW, optional
+        commit_message: "feat(tcp): implement listener with goroutine-per-connection" # NEW
+        commit_body: | # NEW, optional
           Opens a TCP socket on the configured port and spawns a goroutine per
           accepted connection. See RFC 793 §3.4.
-        artifacts:                               # NEW — paths persisted into next submodule (Modal volume, or student repo locally)
+        artifacts: # NEW — paths persisted into next submodule (Modal volume, or student repo locally)
           - checkpoints/ckpt.pt
           - logs/loss.jsonl
         tests:
-          - type: eval                           # NEW sixth type — alias of script with structured asserts
+          - type: eval # NEW sixth type — alias of script with structured asserts
             file: tests/check_val_loss.py
             assert:
               val_loss_lt: 3.5
               tokens_trained_gt: 500000
             timeout_ms: 600000
         resources:
-          - id: tcp-listen-spec                  # NEW — stable id (not title match)
+          - id: tcp-listen-spec # NEW — stable id (not title match)
             title: "TCP listener and accept loops"
             file: tcp/server_doc.md
             type: doc
@@ -532,13 +570,13 @@ modules:
 
 "Crazy simple to sail for a beginner" means: the platform never leaves the student stuck without a next action. Rails, ordered by impact per Agent-A's P0/P1 priorities:
 
-1. **Difficulty-aware resource staging** *(P0, ~1 evening)*. Thread `enrollment.difficulty` into `getResourceStage(type, difficulty, explicitStage)` in `workspace-provider.tsx:47-69`. Junior gets hints at stage-1 (after first run). Mid gets hints at stage-2 (after first fail). Senior never gets hints. The whole "beginner-friendly but not dumbed-down" wedge lives here — today it's literally not wired.
+1. **Difficulty-aware resource staging** _(P0, ~1 evening)_. Thread `enrollment.difficulty` into `getResourceStage(type, difficulty, explicitStage)` in `workspace-provider.tsx:47-69`. Junior gets hints at stage-1 (after first run). Mid gets hints at stage-2 (after first fail). Senior never gets hints. The whole "beginner-friendly but not dumbed-down" wedge lives here — today it's literally not wired.
 2. **Ambient difficulty indicator** in ContextBar. Mono tag `JUNIOR` / `MID` / `SENIOR` near the progress bar. Student needs to know what mode they're in.
-3. **First-run coach-marks** *(P0, 2 evenings)*. 4 inline callouts anchored to real chrome, localStorage-gated, skippable, dismissed on first green test: (a) "Tu tarea: lee el brief arriba", (b) "Archivo activo: `server.go` — completa el stub", (c) "Presiona `RUN` o Ctrl+Enter", (d) "Los recursos se desbloquean si los necesitas". No modal overlay — inline.
+3. **First-run coach-marks** _(P0, 2 evenings)_. 4 inline callouts anchored to real chrome, localStorage-gated, skippable, dismissed on first green test: (a) "Tu tarea: lee el brief arriba", (b) "Archivo activo: `server.go` — completa el stub", (c) "Presiona `RUN` o Ctrl+Enter", (d) "Los recursos se desbloquean si los necesitas". No modal overlay — inline.
 4. **Open current submodule's first stub, not `files[0]`**. One-line fix in `workspace-provider.tsx:153-161` — prefer `activeSubmodule?.stubs[0]?.path` when setting active file on mount.
 5. **Auto-open the stage-0 doc as a tab** next to the stub on first entry to a submodule the student has never run. Codecrafters opens the README alongside; same pattern.
 6. **Warmup block per course** and **submodule `warmup: true`** (see Section 6). First-ever-green celebration distinct from routine success.
-7. **Stuck-state rail** *(P1)*. When `failedRuns >= 3` on the current submodule, inline banner in `test-output.tsx`: "¿Atorado? Revisa `hint` en recursos" linking to the hint resource. Triggers the hint resource to unlock immediately regardless of stage timer.
+7. **Stuck-state rail** _(P1)_. When `failedRuns >= 3` on the current submodule, inline banner in `test-output.tsx`: "¿Atorado? Revisa `hint` en recursos" linking to the hint resource. Triggers the hint resource to unlock immediately regardless of stage timer.
 8. **Per-submodule `estimated_minutes`** rendered as a mono badge in the task-brief. Sets expectation: a 3-minute submodule shouldn't trigger frustration after 5 minutes.
 9. **Test-output summarization.** On failed run, synthesize one-line cause above raw stream ("Your request returned 500, expected 200."). Spanish by default.
 10. **Run-count badge per submodule.** "15 runs to green" as retention metric, neutral framing, not punitive.
@@ -597,15 +635,15 @@ Synthesized from two plan-design-review agents (workspace flow + course/contribu
 
 ### 9.1 Workspace correctness fixes (P1, ship with Phase 0)
 
-| # | Fix | File:line |
-|---|-----|-----------|
-| 9.1.1 | `ResourceTab` stable-id lookup, not title match | `resource-tab.tsx:28-43`, plus loader + schema `resources[].id` |
-| 9.1.2 | Editor state cache key by filepath, not first-200-chars | `editor.tsx:177-191` |
-| 9.1.3 | `Ctrl+K` kbd real onClick, not synthetic KeyboardEvent | `context-bar.tsx:80-84` |
-| 9.1.4 | Test-output auto-run gated on user intent, not mount | `test-output.tsx:46-51` |
-| 9.1.5 | Debounce Ctrl+Enter while status=running | `test-output.tsx:66-69` + disabled state on run button |
-| 9.1.6 | Spanish captions on `IconRail` (module/archivos/docs/correr) | `icon-rail.tsx` |
-| 9.1.7 | `STAGE_DEFAULTS` default unknown types to 99, not 0 | `workspace-provider.tsx:47-52` |
+| #     | Fix                                                          | File:line                                                       |
+| ----- | ------------------------------------------------------------ | --------------------------------------------------------------- |
+| 9.1.1 | `ResourceTab` stable-id lookup, not title match              | `resource-tab.tsx:28-43`, plus loader + schema `resources[].id` |
+| 9.1.2 | Editor state cache key by filepath, not first-200-chars      | `editor.tsx:177-191`                                            |
+| 9.1.3 | `Ctrl+K` kbd real onClick, not synthetic KeyboardEvent       | `context-bar.tsx:80-84`                                         |
+| 9.1.4 | Test-output auto-run gated on user intent, not mount         | `test-output.tsx:46-51`                                         |
+| 9.1.5 | Debounce Ctrl+Enter while status=running                     | `test-output.tsx:66-69` + disabled state on run button          |
+| 9.1.6 | Spanish captions on `IconRail` (module/archivos/docs/correr) | `icon-rail.tsx`                                                 |
+| 9.1.7 | `STAGE_DEFAULTS` default unknown types to 99, not 0          | `workspace-provider.tsx:47-52`                                  |
 
 ### 9.2 Workspace beginner rails (P0, ship with Phase 3)
 
@@ -660,12 +698,12 @@ For submodules where `meta.runtime.target: modal`:
 
 ## 11. Parallelization
 
-| Lane | Phases | Owner | Notes |
-|------|--------|-------|-------|
-| A | 0.1 → 0.2 → 0.3 → 0.4 → 0.5 | CC | Sequential; all touch API+runner surface. Single PR bundled. |
-| B | 1 → 2 → 4 | CC | Sequential; executor → Docker → Modal. |
-| C | 3 | CC | Starts after Phase 0 merges. Touches API + DB + frontend. Parallel with B. |
-| D | 5 | CC | Independent module. Parallel with B and C. |
+| Lane | Phases                      | Owner | Notes                                                                      |
+| ---- | --------------------------- | ----- | -------------------------------------------------------------------------- |
+| A    | 0.1 → 0.2 → 0.3 → 0.4 → 0.5 | CC    | Sequential; all touch API+runner surface. Single PR bundled.               |
+| B    | 1 → 2 → 4                   | CC    | Sequential; executor → Docker → Modal.                                     |
+| C    | 3                           | CC    | Starts after Phase 0 merges. Touches API + DB + frontend. Parallel with B. |
+| D    | 5                           | CC    | Independent module. Parallel with B and C.                                 |
 
 Critical path: A → B (through Phase 2) for the Phase-1 smoke test. Phase 3 and Phase 5 can land in parallel with B. Phase 4 starts after Phase 2 + 3 merge.
 
@@ -685,17 +723,17 @@ Kill-switch: if Phase 2 Docker sandbox doesn't land by end of week 2, defer Phas
 
 ## 13. Failure Modes (new code only, from this plan)
 
-| Path | Failure | Test | Error surface |
-|------|---------|------|---------------|
-| Phase 0.4 merged endpoint | Client drops mid-stream | New test in `test_run.py`, asserts Progress row. | Server-side commit regardless. |
-| Phase 1 Executor | Unknown scheme in `meta.runner` | Unit test with bad scheme. | 400 from API with explicit message. |
-| Phase 2 Docker | Runner host has no Docker | Detect on startup, fail loud. | Admin sees error log + health check red. |
-| Phase 2 Docker | Container hangs | Already covered by per-test timeouts + WaitDelay. | test_timeout event to student. |
-| Phase 3 git commit | Working tree dirty or repo missing | Unit test with pre-corrupted repo. | Progress row still written, git failure logged, admin alerted. Student sees "Commit pending — retrying" badge. |
-| Phase 3 GitHub push | OAuth token expired | Retry with re-auth prompt. | Modal with "Reconnect GitHub" button. |
-| Phase 4 Modal | Budget exceeded | Rate-limit middleware test. | 429 with "Out of GPU budget this month" message. |
-| Phase 4 eval | `metrics.json` missing | Dispatcher test. | Explicit "Your code did not write metrics.json — see docs" error. |
-| Phase 5 validate | Non-Go signature check | Python / JS AST tests. | CLI exits non-zero with line numbers. |
+| Path                      | Failure                            | Test                                              | Error surface                                                                                                  |
+| ------------------------- | ---------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Phase 0.4 merged endpoint | Client drops mid-stream            | New test in `test_run.py`, asserts Progress row.  | Server-side commit regardless.                                                                                 |
+| Phase 1 Executor          | Unknown scheme in `meta.runner`    | Unit test with bad scheme.                        | 400 from API with explicit message.                                                                            |
+| Phase 2 Docker            | Runner host has no Docker          | Detect on startup, fail loud.                     | Admin sees error log + health check red.                                                                       |
+| Phase 2 Docker            | Container hangs                    | Already covered by per-test timeouts + WaitDelay. | test_timeout event to student.                                                                                 |
+| Phase 3 git commit        | Working tree dirty or repo missing | Unit test with pre-corrupted repo.                | Progress row still written, git failure logged, admin alerted. Student sees "Commit pending — retrying" badge. |
+| Phase 3 GitHub push       | OAuth token expired                | Retry with re-auth prompt.                        | Modal with "Reconnect GitHub" button.                                                                          |
+| Phase 4 Modal             | Budget exceeded                    | Rate-limit middleware test.                       | 429 with "Out of GPU budget this month" message.                                                               |
+| Phase 4 eval              | `metrics.json` missing             | Dispatcher test.                                  | Explicit "Your code did not write metrics.json — see docs" error.                                              |
+| Phase 5 validate          | Non-Go signature check             | Python / JS AST tests.                            | CLI exits non-zero with line numbers.                                                                          |
 
 ---
 
@@ -727,4 +765,4 @@ Kill-switch: if Phase 2 Docker sandbox doesn't land by end of week 2, defer Phas
 
 ---
 
-*End of plan. Section 9 and parts of Section 7 will be revised with UX-reviewer inputs before any implementation starts.*
+_End of plan. Section 9 and parts of Section 7 will be revised with UX-reviewer inputs before any implementation starts._

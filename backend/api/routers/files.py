@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlmodel import Session, select
 from api.config import settings
 from api.db.models import Enrollment, WorkingFile
-from api.dependencies import get_db
+from api.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/api/files", tags=["files"])
 
@@ -15,8 +15,7 @@ class PatchFileRequest(BaseModel):
 
 
 @router.get("/{slug}/{lang}")
-def get_files(slug: str, lang: str, db: Session = Depends(get_db)):
-    user_id = settings.default_user_id
+def get_files(slug: str, lang: str, db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     enrollment = db.exec(
         select(Enrollment).where(
             Enrollment.user_id == user_id,
@@ -40,8 +39,7 @@ def get_files(slug: str, lang: str, db: Session = Depends(get_db)):
 
 
 @router.patch("/{slug}/{lang}/{filepath:path}")
-def patch_file(slug: str, lang: str, filepath: str, body: PatchFileRequest, db: Session = Depends(get_db)):
-    user_id = settings.default_user_id
+def patch_file(slug: str, lang: str, filepath: str, body: PatchFileRequest, db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     enrollment = db.exec(
         select(Enrollment).where(
             Enrollment.user_id == user_id,

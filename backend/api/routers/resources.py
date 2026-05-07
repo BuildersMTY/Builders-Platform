@@ -5,14 +5,13 @@ from sqlmodel import Session, select
 from api.config import settings
 from api.course_loader import cache as course_cache
 from api.db.models import Enrollment
-from api.dependencies import get_db
+from api.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/api/resources", tags=["resources"])
 
 
 @router.get("/{slug}/{lang}/{submodule_id:path}")
-def get_resources(slug: str, lang: str, submodule_id: str, db: Session = Depends(get_db)):
-    user_id = settings.default_user_id
+def get_resources(slug: str, lang: str, submodule_id: str, db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     enrollment = db.exec(
         select(Enrollment).where(
             Enrollment.user_id == user_id,

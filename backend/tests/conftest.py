@@ -6,7 +6,7 @@ from sqlmodel import Session, SQLModel, create_engine
 from fastapi.testclient import TestClient
 from api.course_loader import cache as course_cache
 from api.db.models import Enrollment, WorkingFile, Progress  # noqa: F401 — needed for metadata
-from api.dependencies import get_db
+from api.dependencies import get_db, get_current_user
 
 FIXTURES_PATH = Path(__file__).parent / "fixtures"
 
@@ -51,7 +51,11 @@ def client(courses_path, db_session, monkeypatch):
     def _override_db():
         yield db_session
 
+    def _override_user():
+        yield "test-user"
+
     app.dependency_overrides[get_db] = _override_db
+    app.dependency_overrides[get_current_user] = _override_user
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

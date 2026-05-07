@@ -6,7 +6,7 @@ from sqlmodel import Session, select
 from api.config import settings
 from api.course_loader import cache as course_cache
 from api.db.models import Enrollment, WorkingFile
-from api.dependencies import get_db
+from api.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/api/enroll", tags=["enrollment"])
 
@@ -15,8 +15,7 @@ class EnrollRequest(BaseModel):
     locale: str = "es"
 
 @router.post("/{slug}/{lang}")
-def enroll(slug: str, lang: str, body: EnrollRequest, db: Session = Depends(get_db)):
-    user_id = settings.default_user_id
+def enroll(slug: str, lang: str, body: EnrollRequest, db: Session = Depends(get_db), user_id: str = Depends(get_current_user)):
     course = course_cache.get_course(slug, lang, body.locale)
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")

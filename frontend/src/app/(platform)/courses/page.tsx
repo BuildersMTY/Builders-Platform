@@ -1,5 +1,6 @@
 import { fetchCoursesServer } from "@/lib/api";
 import { CourseCard } from "@/components/courses/course-card";
+import { UserNav } from "@/components/auth/user-nav";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -21,6 +22,7 @@ export default async function CoursesPage() {
             <span className="text-text-dim">·</span>
             <span>Catálogo {new Date().getFullYear()}</span>
           </nav>
+          <UserNav />
         </div>
       </header>
 

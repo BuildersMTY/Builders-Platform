@@ -14,6 +14,7 @@ dependencies = [
     "pydantic-settings>=2.7",
     "alembic>=1.13",
     "pytoml>=0.1.21",
+    "shark-auth>=0.1.1",
 ]
 
 [project.optional-dependencies]

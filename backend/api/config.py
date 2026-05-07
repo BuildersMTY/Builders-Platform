@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     runner_url: str = "http://localhost:9000"
     courses_path: str = "./_courses"
     default_user_id: str = "local"
+    shark_auth_url: str | None = None
+    shark_admin_key: str | None = None
 
     model_config = {"env_file": "../.env"}
 

@@ -11,7 +11,10 @@ import type {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
 
 async function fetchJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`, init);
+  const res = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    credentials: "include",
+  });
   if (!res.ok) {
     throw new Error(`API error: ${res.status} ${res.statusText}`);
   }
@@ -75,6 +78,7 @@ export async function saveFile(
   await fetch(`${API_BASE}/api/files/${courseId}/${lang}/${filepath}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify({ content }),
   });
 }

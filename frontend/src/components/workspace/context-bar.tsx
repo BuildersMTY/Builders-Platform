@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { HelpCircle } from "lucide-react";
 import { useWorkspace } from "./workspace-provider";
+import { UserNav } from "@/components/auth/user-nav";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -75,6 +76,8 @@ export function ContextBar() {
           </div>
         </div>
       )}
+
+      <UserNav />
 
       {/* Command palette trigger */}
       <kbd className="hidden lg:inline border border-border px-1.5 py-0.5 font-mono text-[10px] text-text-dim flex-shrink-0 cursor-pointer hover:border-text-dim hover:text-text-muted transition-colors"

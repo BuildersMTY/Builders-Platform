@@ -1,6 +1,6 @@
 # BuildersPlatform dev Makefile
 
-.PHONY: dev dev-all stop runner api frontend install build-runner
+.PHONY: dev dev-all stop runner api frontend shark all install build-runner
 
 # dev — background processes with combined output. Ctrl+C kills all.
 dev:
@@ -22,6 +22,17 @@ api:
 
 frontend:
 	cd frontend && npm run dev
+
+# shark — download and run the SharkAuth binary on :8080
+shark:
+	@sh -c 'if [ ! -f bin/shark ]; then \
+		mkdir -p bin && \
+		curl -fsSL https://github.com/shark-auth/shark/releases/latest/download/shark_linux_x86_64.tar.gz -o bin/shark.tar.gz && \
+		tar -xzf bin/shark.tar.gz -C bin && \
+		rm bin/shark.tar.gz && \
+		chmod +x bin/shark; \
+	fi; \
+	bin/shark serve --no-prompt'
 
 install:
 	cd backend/api && uv sync

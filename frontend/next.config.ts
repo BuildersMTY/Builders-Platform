@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
         source: "/api/:path*",
         destination: "http://localhost:8000/api/:path*",
       },
+      {
+        source: "/shark/:path*",
+        destination: "http://localhost:8080/:path*",
+      },
     ];
   },
 };

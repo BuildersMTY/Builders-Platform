@@ -2,22 +2,25 @@
 from __future__ import annotations
 import json
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from sse_starlette.sse import EventSourceResponse
 from api.config import settings
 from api.db.models import Progress
 from api.routers.run import pending_runs
+from api.dependencies import get_current_user
 
 router = APIRouter(prefix="/api/stream", tags=["stream"])
 
 @router.get("/{run_id}")
-async def stream_run(run_id: str):
+async def stream_run(run_id: str, user_id: str = Depends(get_current_user)):
     pending = pending_runs.pop(run_id, None)
     if not pending:
         raise HTTPException(status_code=404, detail="Run not found or already consumed")
 
+    if pending["user_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     run_request = pending["request"]
-    user_id = pending["user_id"]
     course_slug = pending["course_slug"]
     language = pending["language"]
     submodule_id = pending["submodule_id"]
