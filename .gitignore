@@ -36,6 +36,10 @@ htmlcov/
 .DS_Store
 Thumbs.db
 *.db
+*.db-shm
+*.db-wal
+data/.shark-first-boot
+pwd
 
 # Frontend
 frontend/node_modules/

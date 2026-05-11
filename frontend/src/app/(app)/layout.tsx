@@ -2,6 +2,7 @@
 
 import { AuthProvider } from "@/components/auth/auth-provider";
 import { PlatformGuard } from "@/components/auth/platform-guard";
+import { RouteTransition } from "@/components/navigation/route-transition";
 
 export default function AppLayout({
   children,
@@ -10,7 +11,9 @@ export default function AppLayout({
 }) {
   return (
     <AuthProvider>
-      <PlatformGuard>{children}</PlatformGuard>
+      <PlatformGuard>
+        <RouteTransition>{children}</RouteTransition>
+      </PlatformGuard>
     </AuthProvider>
   );
 }

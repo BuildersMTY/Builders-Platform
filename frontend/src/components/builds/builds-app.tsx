@@ -228,7 +228,7 @@ function TopNav({ query, setQuery, active = "builds" }: TopNavProps) {
           fontWeight: 500,
           color: "#fff",
         }}>A</div>
-        <span style={{ fontSize: 12.5, color: "var(--text)" }}>Avery</span>
+        <span style={{ fontSize: 12.5, color: "var(--text)" }}>Raúl</span>
         <IconChevron size={10} style={{ color: "var(--text-dim)", transform: "rotate(90deg)" }} />
       </div>
 

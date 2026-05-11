@@ -26,26 +26,15 @@ export default async function LandingPage() {
   return (
     <>
       <OverdriveBackground />
-      {/* Hero owns the only orchestrated entrance motion. */}
       <Hero />
-
-      {/* Method — no reveal wrapper; lives as the natural next spread. */}
       <HowItWorks />
-
-      {/* Project index — subtle reveal; it's the "what's on offer" moment. */}
       <ScrollReveal>
         <ProjectShowcase courses={courses} />
       </ScrollReveal>
-
-      {/* Manifesto — editorial pull quote. The one place the voice speaks. */}
       <ScrollReveal>
         <Manifesto />
       </ScrollReveal>
-
-      {/* Value bands each reveal internally. */}
       <CareerValue />
-
-      {/* Closing move — no reveal, full presence. */}
       <PricingTeaser />
     </>
   );

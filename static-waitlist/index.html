@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Buildmancer | Engineering practice for the AI era</title>
+    <meta
+      name="description"
+      content="Keep your coding skills sharp in the AI era, or forge them from zero. Real engineering projects, tests, feedback, and a focused practice workspace."
+    />
+    <link rel="icon" href="./assets/builderslogo2.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0808;
+        --bg-deep: #070606;
+        --surface: #0f0d0d;
+        --surface-alt: #141111;
+        --surface-hover: #1a1616;
+        --border: #221f1f;
+        --border-strong: #2e2929;
+        --border-bright: #3a3333;
+        --primary: #ff2b2b;
+        --primary-hover: #ff4848;
+        --primary-dim: rgba(255, 43, 43, 0.14);
+        --text: #f5f3f0;
+        --text-muted: #a6a19a;
+        --text-dim: #6b6660;
+        --text-faint: #4a4540;
+        --success: #6fd6b8;
+        --error: #ff6b5b;
+        --warning: #ffb347;
+        --info: #7aa7ff;
+        color-scheme: dark;
+      }
+
+      @keyframes ambient-drift {
+        0%,
+        100% {
+          transform: translate3d(0, 0, 0) scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translate3d(18px, -12px, 0) scale(1.03);
+          opacity: 0.9;
+        }
+      }
+
+      @keyframes grid-breathe {
+        0%,
+        100% {
+          opacity: 0.03;
+          background-position: 0 0;
+        }
+        50% {
+          opacity: 0.055;
+          background-position: 24px 18px;
+        }
+      }
+
+      @keyframes reveal-up {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 18px, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes reveal-left {
+        from {
+          opacity: 0;
+          transform: translate3d(-22px, 0, 0);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+        }
+      }
+
+      @keyframes viewport-in {
+        from {
+          opacity: 0;
+          transform: translate3d(0, 24px, 0) scale(0.985);
+        }
+        to {
+          opacity: 1;
+          transform: translate3d(0, 0, 0) scale(1);
+        }
+      }
+
+      @keyframes soft-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 rgba(255, 43, 43, 0);
+        }
+        50% {
+          box-shadow: 0 0 18px rgba(255, 43, 43, 0.28);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Sora, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        position: relative;
+        min-height: 100vh;
+        overflow: hidden;
+      }
+
+      .page::before,
+      .page::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .page::before {
+        background:
+          radial-gradient(circle at 82% 18%, rgba(255, 43, 43, 0.13), transparent 30%),
+          radial-gradient(circle at 12% 86%, rgba(255, 107, 91, 0.08), transparent 26%);
+        opacity: 0.7;
+        animation: ambient-drift 16s ease-in-out infinite;
+      }
+
+      .page::after {
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 48px 48px;
+        opacity: 0.035;
+        animation: grid-breathe 18s ease-in-out infinite;
+      }
+
+      .nav {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 20;
+        border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        backdrop-filter: blur(14px);
+      }
+
+      .nav-inner,
+      .section {
+        width: min(100% - 48px, 1152px);
+        margin-inline: auto;
+      }
+
+      .nav-inner {
+        display: flex;
+        height: 64px;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .brand img {
+        width: 28px;
+        height: 28px;
+        transition: transform 220ms ease, filter 220ms ease;
+      }
+
+      .brand:hover img {
+        filter: drop-shadow(0 0 10px rgba(255, 43, 43, 0.25));
+        transform: translateY(-1px);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+
+      .nav-actions a {
+        color: var(--text-dim);
+        font-size: 13px;
+        font-weight: 600;
+        transition: color 160ms ease;
+      }
+
+      .nav-actions a:hover {
+        color: var(--primary);
+      }
+
+      .nav-actions .join {
+        display: inline-flex;
+        height: 36px;
+        align-items: center;
+        border: 1px solid var(--primary);
+        background: var(--primary-dim);
+        padding: 0 18px;
+        color: var(--primary);
+        font-size: 12px;
+        font-weight: 800;
+        transition: background 160ms ease, color 160ms ease;
+      }
+
+      .nav-actions .join:hover {
+        background: var(--primary);
+        color: var(--bg);
+      }
+
+      .hero {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        min-height: calc(100vh - 64px);
+        grid-template-columns: repeat(12, 1fr);
+        gap: 48px 24px;
+        padding-top: 140px;
+        padding-bottom: 72px;
+        align-items: center;
+      }
+
+      .hero-copy {
+        grid-column: span 7;
+      }
+
+      .waitlist-card {
+        grid-column: span 5;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid var(--border-strong);
+        background: color-mix(in srgb, var(--surface) 82%, transparent);
+        padding: 8px 12px;
+        color: var(--text-dim);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        opacity: 0;
+        animation: reveal-left 720ms cubic-bezier(0.16, 1, 0.3, 1) 90ms forwards;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: 0 0 16px rgba(255, 43, 43, 0.35);
+        animation: soft-pulse 2.4s ease-in-out infinite;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 32px 0 0;
+        font-size: clamp(3.1rem, 1.5rem + 6.6vw, 8.4rem);
+        line-height: 0.88;
+        letter-spacing: -0.055em;
+        opacity: 0;
+        animation: reveal-left 820ms cubic-bezier(0.16, 1, 0.3, 1) 180ms forwards;
+      }
+
+      .lead {
+        max-width: 57ch;
+        margin: 32px 0 0;
+        color: var(--text-muted);
+        font-size: 17px;
+        line-height: 1.75;
+        opacity: 0;
+        animation: reveal-up 780ms cubic-bezier(0.16, 1, 0.3, 1) 340ms forwards;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 32px;
+        opacity: 0;
+        animation: reveal-up 720ms cubic-bezier(0.16, 1, 0.3, 1) 460ms forwards;
+      }
+
+      .chip {
+        border: 1px solid var(--border);
+        background: var(--surface);
+        padding: 9px 12px;
+        color: var(--text-muted);
+        font-size: 12px;
+        transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+      }
+
+      .chip:hover {
+        border-color: var(--border-bright);
+        color: var(--text);
+        transform: translateY(-1px);
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 40px;
+        opacity: 0;
+        animation: reveal-up 720ms cubic-bezier(0.16, 1, 0.3, 1) 560ms forwards;
+      }
+
+      .button {
+        display: inline-flex;
+        height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        border: 1px solid var(--primary);
+        background: var(--primary);
+        padding: 0 24px;
+        color: var(--bg);
+        font-size: 13px;
+        font-weight: 800;
+        transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+      }
+
+      .button:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+      }
+
+      .button.secondary {
+        border-color: var(--border-strong);
+        background: var(--surface);
+        color: var(--text-muted);
+      }
+
+      .button.secondary:hover {
+        border-color: var(--text-dim);
+        background: var(--surface-hover);
+        color: var(--text);
+      }
+
+      .access-card {
+        border: 1px solid var(--border);
+        background: var(--bg-deep);
+        padding: 16px;
+        opacity: 0;
+        animation: reveal-up 760ms cubic-bezier(0.16, 1, 0.3, 1) 420ms forwards;
+      }
+
+      .access-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .label {
+        margin: 0;
+        color: var(--text-dim);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 10px 0 0;
+        font-family: "Bodoni Moda", Georgia, serif;
+        font-size: 32px;
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .icon-box {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        border: 1px solid var(--border-strong);
+        background: var(--surface);
+        color: var(--primary);
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      .access-card p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      form {
+        position: relative;
+        margin-top: 16px;
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 86%, transparent);
+        padding: 20px;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+        opacity: 0;
+        animation: reveal-up 760ms cubic-bezier(0.16, 1, 0.3, 1) 540ms forwards;
+      }
+
+      form::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 1px;
+        background: color-mix(in srgb, var(--primary) 50%, transparent);
+      }
+
+      .field-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 8px;
+      }
+
+      label span {
+        color: var(--text-dim);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        font-family: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      input,
+      select {
+        height: 48px;
+        width: 100%;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--bg-deep);
+        padding: 0 16px;
+        color: var(--text);
+        font: inherit;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 160ms ease, background 160ms ease;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: var(--primary);
+      }
+
+      input::placeholder {
+        color: var(--text-faint);
+      }
+
+      .split {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 12px;
+      }
+
+      .hidden-field {
+        display: none;
+      }
+
+      .submit {
+        width: 100%;
+        margin-top: 16px;
+        cursor: pointer;
+      }
+
+      .submit[disabled] {
+        cursor: not-allowed;
+        border-color: var(--border-strong);
+        background: var(--surface-hover);
+        color: var(--text-dim);
+      }
+
+      .form-message {
+        min-height: 20px;
+        margin: 16px 0 0;
+        color: var(--text-dim);
+        font-size: 12px;
+      }
+
+      .form-message.error {
+        color: var(--error);
+      }
+
+      .checks {
+        display: grid;
+        gap: 8px;
+        margin-top: 16px;
+        opacity: 0;
+        animation: reveal-up 720ms cubic-bezier(0.16, 1, 0.3, 1) 660ms forwards;
+      }
+
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--text-dim);
+        font-size: 12px;
+      }
+
+      .check::before {
+        content: "✓";
+        color: var(--success);
+      }
+
+      .demo {
+        position: relative;
+        z-index: 1;
+        scroll-margin-top: 96px;
+        padding-bottom: 80px;
+      }
+
+      .section-head {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 32px;
+        margin-bottom: 24px;
+        opacity: 0;
+        animation: reveal-up 720ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .section-head p {
+        max-width: 43ch;
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.7;
+      }
+
+      .section-head h2 {
+        margin-top: 12px;
+        font-size: clamp(2.4rem, 1.8rem + 2vw, 3.2rem);
+      }
+
+      .viewport {
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: var(--bg-deep);
+        box-shadow: 0 28px 90px rgba(0, 0, 0, 0.24);
+        opacity: 0;
+        transform-origin: center top;
+        animation: viewport-in 820ms cubic-bezier(0.16, 1, 0.3, 1) 120ms forwards;
+        transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+      }
+
+      .viewport:hover {
+        border-color: var(--border-bright);
+        box-shadow: 0 34px 110px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
+      }
+
+      .viewport-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border);
+        background: var(--surface);
+        padding: 12px 16px;
+      }
+
+      .dots {
+        display: flex;
+        gap: 8px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+      }
+
+      .viewport-title,
+      .video-caption {
+        color: var(--text-faint);
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 10px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+
+      .video-wrap {
+        position: relative;
+        background: #070606;
+        padding: 12px;
+      }
+
+      video {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: var(--bg-deep);
+        object-fit: cover;
+      }
+
+      .video-caption {
+        position: absolute;
+        inset: auto 12px 12px;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+        background: color-mix(in srgb, var(--bg) 80%, transparent);
+        padding: 8px 12px;
+        backdrop-filter: blur(12px);
+      }
+
+      .proof {
+        position: relative;
+        z-index: 1;
+        padding-bottom: 80px;
+      }
+
+      .proof-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        border-block: 1px solid var(--border);
+        padding-block: 32px;
+      }
+
+      .proof-item {
+        display: flex;
+        gap: 16px;
+        opacity: 0;
+        animation: reveal-up 680ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      .proof-item:nth-child(2) {
+        animation-delay: 80ms;
+      }
+
+      .proof-item:nth-child(3) {
+        animation-delay: 160ms;
+      }
+
+      .proof-icon {
+        color: var(--primary);
+        font-size: 20px;
+      }
+
+      .proof-item h3,
+      .module h3 {
+        margin: 0;
+        font-size: 15px;
+      }
+
+      .proof-item p,
+      .module p {
+        margin: 8px 0 0;
+        color: var(--text-dim);
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .modules {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        padding-bottom: 96px;
+      }
+
+      .module {
+        border: 1px solid var(--border);
+        background: color-mix(in srgb, var(--surface) 70%, transparent);
+        padding: 20px;
+        opacity: 0;
+        animation: reveal-up 680ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
+      }
+
+      .module:nth-child(2) {
+        animation-delay: 80ms;
+      }
+
+      .module:nth-child(3) {
+        animation-delay: 160ms;
+      }
+
+      .module:nth-child(4) {
+        animation-delay: 240ms;
+      }
+
+      .module:hover {
+        border-color: var(--border-bright);
+        background: color-mix(in srgb, var(--surface-hover) 76%, transparent);
+        transform: translateY(-2px);
+      }
+
+      .module-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 32px;
+      }
+
+      .module-index,
+      .module-tag {
+        color: var(--text-faint);
+        font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .module-tag {
+        border: 1px solid var(--border-strong);
+        background: var(--bg-deep);
+        padding: 4px 8px;
+        font-size: 10px;
+      }
+
+      .footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--border);
+      }
+
+      .footer-inner {
+        display: flex;
+        min-height: 76px;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--text-dim);
+        font-size: 12px;
+      }
+
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .footer-brand img {
+        width: 20px;
+        height: 20px;
+      }
+
+      @media (max-width: 920px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+
+        .hero-copy,
+        .waitlist-card {
+          grid-column: auto;
+        }
+
+        .proof-grid,
+        .modules {
+          grid-template-columns: 1fr;
+        }
+
+        .section-head {
+          align-items: start;
+          flex-direction: column;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .nav-inner,
+        .section {
+          width: min(100% - 32px, 1152px);
+        }
+
+        .nav-actions a:not(.join) {
+          display: none;
+        }
+
+        .hero {
+          padding-top: 112px;
+        }
+
+        h1 {
+          font-size: clamp(3rem, 17vw, 5.4rem);
+        }
+
+        .split {
+          grid-template-columns: 1fr;
+        }
+
+        .video-caption {
+          display: none;
+        }
+
+        .footer-inner {
+          align-items: flex-start;
+          flex-direction: column;
+          justify-content: center;
+          gap: 10px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="top" class="page">
+      <nav class="nav">
+        <div class="nav-inner">
+          <a class="brand" href="#top" aria-label="Buildmancer home">
+            <img src="./assets/builderslogo2.svg" alt="" />
+            <span>Buildmancer</span>
+          </a>
+          <div class="nav-actions">
+            <a href="#demo">Demo</a>
+            <a href="#waitlist">Waitlist</a>
+            <a class="join" href="#waitlist">Join waitlist</a>
+          </div>
+        </div>
+      </nav>
+
+      <main>
+        <section class="section hero">
+          <div class="hero-copy">
+            <div class="eyebrow">Private beta waitlist</div>
+            <h1>Keep your coding skills sharp in the AI era.</h1>
+            <p class="lead">
+              Or forge them from zero. Buildmancer skips toy exercises and turns
+              real engineering projects into guided missions: servers, shells,
+              databases, developer tools, and your own GPT, with tests, feedback,
+              and a workspace built for serious practice.
+            </p>
+            <div class="chips">
+              <span class="chip">No passive video lessons</span>
+              <span class="chip">Build real systems</span>
+              <span class="chip">Tests from the first task</span>
+            </div>
+            <div class="hero-actions">
+              <a class="button" href="#demo">▶ Watch demo</a>
+              <a class="button secondary" href="#waitlist">Join waitlist →</a>
+            </div>
+          </div>
+
+          <aside id="waitlist" class="waitlist-card">
+            <div class="access-card">
+              <div class="access-head">
+                <div>
+                  <p class="label">Launchpad access</p>
+                  <h2>Get in early</h2>
+                </div>
+                <div class="icon-box">⌘</div>
+              </div>
+              <p>
+                We are validating with builders who want deep engineering practice
+                before the product opens publicly.
+              </p>
+            </div>
+
+            <form id="waitlist-form">
+              <div class="field-grid">
+                <input class="hidden-field" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+                <label>
+                  <span>Email</span>
+                  <input required type="email" name="email" autocomplete="email" placeholder="you@example.com" />
+                </label>
+                <label>
+                  <span>Name</span>
+                  <input name="name" autocomplete="name" placeholder="Raul" />
+                </label>
+                <div class="split">
+                  <label>
+                    <span>Profile</span>
+                    <select name="profile">
+                      <option value="builder">Builder</option>
+                      <option value="student">Student</option>
+                      <option value="engineer">Engineer</option>
+                      <option value="founder">Founder</option>
+                      <option value="team">Team</option>
+                    </select>
+                  </label>
+                  <label>
+                    <span>I want to build</span>
+                    <input name="goal" placeholder="servers, databases, systems..." />
+                  </label>
+                </div>
+                <button id="submit-button" class="button submit" type="submit">Join waitlist →</button>
+              </div>
+              <p id="form-message" class="form-message">
+                No spam. Just early access, cohort invites, and important updates.
+              </p>
+            </form>
+
+            <div class="checks">
+              <div class="check">Early access to the private beta</div>
+              <div class="check">Vote on the next systems to build</div>
+              <div class="check">Invites to guided cohorts and demo sessions</div>
+            </div>
+          </aside>
+        </section>
+
+        <section id="demo" class="section demo">
+          <div class="section-head">
+            <div>
+              <p class="label">Product viewport</p>
+              <h2>Watch the loop in one screen.</h2>
+            </div>
+            <p>
+              The demo shows the core promise: brief, code, files, tests, and progress
+              connected tightly enough that practice feels like shipping.
+            </p>
+          </div>
+
+          <div class="viewport">
+            <div class="viewport-bar">
+              <div class="dots">
+                <span class="dot" style="background: var(--error)"></span>
+                <span class="dot" style="background: var(--warning)"></span>
+                <span class="dot" style="background: var(--success)"></span>
+              </div>
+              <div class="viewport-title">buildmancer-demo.mp4</div>
+            </div>
+            <div class="video-wrap">
+              <video src="./assets/buildmancer-demo.mp4" controls autoplay muted loop playsinline preload="metadata"></video>
+              <div class="video-caption">
+                <span>workspace tour</span>
+                <span>brief · editor · tests · progress</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section proof">
+          <div class="proof-grid">
+            <div class="proof-item">
+              <div class="proof-icon">⌁</div>
+              <div>
+                <h3>Real code</h3>
+                <p>Every module ends in a working artifact, not loose theory.</p>
+              </div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-icon">✓</div>
+              <div>
+                <h3>Immediate feedback</h3>
+                <p>Tests and checkpoints show exactly what your system handles.</p>
+              </div>
+            </div>
+            <div class="proof-item">
+              <div class="proof-icon">▣</div>
+              <div>
+                <h3>Integrated workspace</h3>
+                <p>Editor, brief, files, tests, and progress live in one surface.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section modules">
+          <article class="module">
+            <div class="module-top"><span class="module-index">01</span><span class="module-tag">Go</span></div>
+            <h3>HTTP server</h3>
+            <p>Sockets, parsing, routing, responses, and load-test checkpoints.</p>
+          </article>
+          <article class="module">
+            <div class="module-top"><span class="module-index">02</span><span class="module-tag">Rust</span></div>
+            <h3>SQLite clone</h3>
+            <p>Pages, cursors, B-trees, persistence, and query execution.</p>
+          </article>
+          <article class="module">
+            <div class="module-top"><span class="module-index">03</span><span class="module-tag">C</span></div>
+            <h3>Unix shell</h3>
+            <p>Processes, pipes, signals, jobs, and terminal control.</p>
+          </article>
+          <article class="module">
+            <div class="module-top"><span class="module-index">04</span><span class="module-tag">AI</span></div>
+            <h3>Build your own GPT</h3>
+            <p>Tokenization, attention, training loops, inference, and evals from scratch.</p>
+          </article>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="section footer-inner">
+          <div class="footer-brand">
+            <img src="./assets/builderslogo2.svg" alt="" />
+            <span>Buildmancer © <span id="year"></span></span>
+          </div>
+          <span>Private beta for people who build from first principles.</span>
+        </div>
+      </footer>
+    </div>
+
+    <script src="./config.js"></script>
+    <script type="module">
+      import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+      const config = window.BUILDMANCER_WAITLIST_CONFIG || {};
+      const form = document.querySelector("#waitlist-form");
+      const button = document.querySelector("#submit-button");
+      const message = document.querySelector("#form-message");
+      const year = document.querySelector("#year");
+      year.textContent = new Date().getFullYear();
+
+      function setMessage(text, isError = false) {
+        message.textContent = text;
+        message.classList.toggle("error", isError);
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(form);
+        if (String(formData.get("company") || "").trim()) {
+          setMessage("You are on the list.");
+          form.reset();
+          return;
+        }
+
+        if (!config.supabaseUrl || !config.supabasePublishableKey) {
+          setMessage("Supabase is not configured yet. Add config.js before deploying.", true);
+          return;
+        }
+
+        const supabase = createClient(config.supabaseUrl, config.supabasePublishableKey);
+        const tableName = config.tableName || "waitlist_signups";
+        const signup = {
+          email: String(formData.get("email") || "").trim().toLowerCase(),
+          name: String(formData.get("name") || "").trim().slice(0, 80),
+          profile: String(formData.get("profile") || "").trim().slice(0, 40),
+          goal: String(formData.get("goal") || "").trim().slice(0, 180),
+          source: "static-waitlist",
+          user_agent: navigator.userAgent,
+        };
+
+        button.disabled = true;
+        button.textContent = "Saving";
+        setMessage("Saving your spot...");
+
+        const { error } = await supabase.from(tableName).insert(signup);
+
+        if (error) {
+          if (error.code === "23505") {
+            setMessage("You were already on the waitlist. We will reach out soon.");
+            form.reset();
+          } else {
+            setMessage(error.message || "Something went wrong. Try again.", true);
+          }
+          button.disabled = false;
+          button.textContent = "Join waitlist →";
+          return;
+        }
+
+        form.reset();
+        button.textContent = "Joined";
+        setMessage("You are on the list. We will reach out when access opens.");
+      });
+    </script>
+  </body>
+</html>

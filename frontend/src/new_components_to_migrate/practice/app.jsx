@@ -86,7 +86,7 @@ const LEADERBOARD = [
   { rank: 3,  handle: "segfault_sally",  drills: 168, streak: 38 },
   { rank: 4,  handle: "big_o_nothing",   drills: 154, streak: 35 },
   { rank: 5,  handle: "kern_el_panic",   drills: 149, streak: 29 },
-  { rank: 18, handle: "avery",           drills: 63,  streak: 12, you: true },
+  { rank: 18, handle: "raul",           drills: 63,  streak: 12, you: true },
 ];
 
 /* ———— Daily drill hero ———— */

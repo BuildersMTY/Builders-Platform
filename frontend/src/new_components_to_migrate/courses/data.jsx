@@ -1,8 +1,8 @@
 /* Courses dashboard data — Buildmancer */
 
 const USER = {
-  handle: "avery",
-  display: "Avery",
+  handle: "raul",
+  display: "Raúl",
   joined_days: 42,
   timezone: "PT",
   active_days: 9, // out of last 14

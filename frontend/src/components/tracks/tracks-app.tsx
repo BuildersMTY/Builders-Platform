@@ -11,8 +11,8 @@ import { Icon } from "@/components/workspace-v2/icons";
  * ============================================================ */
 
 const USER = {
-  handle: "avery",
-  display: "Avery",
+  handle: "raul",
+  display: "Raúl",
   joined_days: 42,
   timezone: "PT",
   active_days: 9,

@@ -7,8 +7,8 @@ import { Icon } from "@/components/workspace-v2/icons";
 /* Practice page — drills, daily challenge, streaks */
 
 const USER = {
-  handle: "avery",
-  display: "Avery",
+  handle: "raul",
+  display: "Raúl",
   joined_days: 42,
   timezone: "PT",
   active_days: 9,
@@ -150,7 +150,7 @@ const LEADERBOARD: LeaderboardRow[] = [
   { rank: 3, handle: "segfault_sally", drills: 168, streak: 38 },
   { rank: 4, handle: "big_o_nothing", drills: 154, streak: 35 },
   { rank: 5, handle: "kern_el_panic", drills: 149, streak: 29 },
-  { rank: 18, handle: "avery", drills: 63, streak: 12, you: true },
+  { rank: 18, handle: "raul", drills: 63, streak: 12, you: true },
 ];
 
 /* ———— LangBadge (ported from courses/chrome.jsx) ———— */

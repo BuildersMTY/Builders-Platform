@@ -18,7 +18,7 @@ import {
 import Link from 'next/link';
 
 // --- PIXEL PERFECT MOCK DATA ---
-const USER = { handle: "avery", display: "Avery", joined_days: 42, timezone: "PT", active_days: 9 };
+const USER = { handle: "raul", display: "Raúl", joined_days: 42, timezone: "PT", active_days: 9 };
 
 const ACTIVE = {
   course_id: "http-server",
