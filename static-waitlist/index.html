@@ -15,6 +15,13 @@
       href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500;600;700&family=Sora:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script
+      defer
+      src="https://xray.hellyeahai.com/script.js"
+      data-website-id="019ed13e-0b09-7000-9c33-ecd0fc88252f"
+      data-env="prod"
+      data-domains="builders-platform.vercel.app"
+    ></script>
     <style>
       :root {
         --bg: #0a0808;
@@ -845,7 +852,12 @@
           </a>
           <div class="nav-actions">
             <a href="#demo">Demo</a>
-            <a class="join" href="#waitlist">Join waitlist</a>
+            <a
+              class="join"
+              href="#waitlist"
+              data-hy-event="waitlist_cta_clicked"
+              data-hy-prop-location="nav"
+            >Join waitlist</a>
           </div>
         </div>
       </nav>
@@ -867,8 +879,18 @@
               <span class="chip">Tests from the first task</span>
             </div>
             <div class="hero-actions">
-              <a class="button" href="#demo">▶ Watch demo</a>
-              <a class="button secondary" href="#waitlist">Join waitlist →</a>
+              <a
+                class="button"
+                href="#demo"
+                data-hy-event="watch_demo_clicked"
+                data-hy-prop-location="hero"
+              >▶ Watch demo</a>
+              <a
+                class="button secondary"
+                href="#waitlist"
+                data-hy-event="waitlist_cta_clicked"
+                data-hy-prop-location="hero"
+              >Join waitlist →</a>
             </div>
           </div>
 
@@ -887,7 +909,12 @@
               </p>
             </div>
 
-            <form id="waitlist-form">
+            <form
+              id="waitlist-form"
+              data-hy-event="cv.leadSubmit"
+              data-hy-prop-form="waitlist"
+              data-hy-prop-source="static-waitlist"
+            >
               <div class="field-grid">
                 <input class="hidden-field" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
                 <label>
@@ -914,7 +941,11 @@
                     <input name="goal" placeholder="servers, databases, systems..." />
                   </label>
                 </div>
-                <button id="submit-button" class="button submit" type="submit">Join waitlist →</button>
+                <button
+                  id="submit-button"
+                  class="button submit"
+                  type="submit"
+                >Join waitlist →</button>
               </div>
               <p id="form-message" class="form-message">
                 No spam. Just early access, cohort invites, and important updates.
